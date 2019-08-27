@@ -14,8 +14,8 @@ class ChangeLatLongToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('latitude')->after('address')->change();
-            $table->string('longitude')->after('latitude')->change();
+            $table->string('latitude')->after('address')->nullable()->change();
+            $table->string('longitude')->after('latitude')->nullable()->change();
         });
     }
 
