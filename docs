@@ -1,0 +1,1 @@
+php artisan api:generate --routePrefix="api/*" --actAsUserId=1

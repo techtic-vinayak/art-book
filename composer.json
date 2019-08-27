@@ -1,0 +1,142 @@
+{
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.6",
+        "backpack/base": "dev-master",
+        "backpack/crud": "dev-master",
+        "backpack/menucrud": "dev-master",
+        "backpack/newscrud": "dev-master",
+        "backpack/pagemanager": "dev-master",
+        "backpack/permissionmanager": "dev-master",
+        "backpack/settings": "dev-master",
+        "barryvdh/laravel-elfinder": "^0.4.1",
+        "benwilkins/laravel-fcm-notification": "dev-master",
+        "fideloper/proxy": "^4.0",
+        "laravel/framework": "5.7.*",
+        "laravel/tinker": "^1.0",
+        "mpociot/laravel-apidoc-generator": "2.*",
+        "phpro/grumphp": "^0.14.2",
+        "tymon/jwt-auth": "^1.0"
+    },
+    "require-dev": {
+        "backpack/generators": "dev-master",
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.0",
+        "fzaninotto/faker": "^1.4",
+        "laracasts/generators": "dev-master",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^2.0",
+        "phpunit/phpunit": "^7.0",
+        "squizlabs/php_codesniffer": "^3.3"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./packages/backpack/base",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/crud",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/generators",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/menu-crud",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/news-crud",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/page-manager",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/permission-manager",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/backpack/settings",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "./packages/laravel-fcm-notification-master",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    }
+}

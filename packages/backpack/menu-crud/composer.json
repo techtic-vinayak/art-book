@@ -1,0 +1,69 @@
+{
+    "name": "backpack/menucrud",
+    "type": "library",
+    "description": "An admin panel for menu items, using Backpack\\CRUD on Laravel 5.",
+    "keywords": [
+        "backpack",
+        "MenuCRUD"
+    ],
+    "homepage": "https://github.com/backpack/MenuCRUD",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Cristian Tabacitu",
+            "email": "hello@tabacitu.ro",
+            "homepage": "http://tabacitu.ro",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "illuminate/support": "~5.1",
+        "php" : "~5.5|~7.0",
+        "backpack/crud": "dev-master",
+        "backpack/pagemanager": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*",
+        "scrutinizer/ocular": "~1.1",
+        "squizlabs/php_codesniffer": "~2.3"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../crud",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../page-manager",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Backpack\\MenuCRUD\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Backpack\\MenuCRUD\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Backpack\\MenuCRUD\\MenuCRUDServiceProvider"
+            ]
+        }
+    }
+}
