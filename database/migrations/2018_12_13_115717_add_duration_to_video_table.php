@@ -13,8 +13,8 @@ class AddDurationToVideoTable extends Migration
      */
     public function up()
     {
-        Schema::table('video', function (Blueprint $table) {
-            $table->string('video_duration')->after('video');
+        Schema::table('images', function (Blueprint $table) {
+            // $table->string('image_duration')->after('image');
         });
     }
 
@@ -25,8 +25,8 @@ class AddDurationToVideoTable extends Migration
      */
     public function down()
     {
-        Schema::table('video', function (Blueprint $table) {
-            // $table->dropColumn('video_duration');
+        Schema::table('images', function (Blueprint $table) {
+            // $table->dropColumn('image_duration');
         });
     }
 }

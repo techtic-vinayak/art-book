@@ -13,13 +13,11 @@ class CreateVideoTable extends Migration
      */
     public function up()
     {
-        Schema::create('video', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('caption')->nullable();
-            $table->string('thumb_image')->nullable();
-            $table->string('video_type')->default('private');
-            $table->string('video');
+            $table->string('image');
             $table->string('request_type')->default('save');
             $table->timestamps();
         });
@@ -32,6 +30,6 @@ class CreateVideoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('video');
+        Schema::dropIfExists('images');
     }
 }

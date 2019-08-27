@@ -17,13 +17,10 @@ class CreateRepliesTable extends Migration
             $table->increments('id');
             $table->integer('parent_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned();
-            $table->integer('video_id')->unsigned();
+            $table->integer('image_id')->unsigned();
             $table->integer('to_user_id')->unsigned();
             $table->string('caption');
-            $table->string('thumb_image');
-            $table->string('video_type')->default('private');
-            $table->string('video');
-            $table->string('video_duration');
+            $table->string('image');
             $table->timestamps();
         });
     }

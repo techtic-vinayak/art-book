@@ -13,10 +13,10 @@ class CreateViewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('video_views', function (Blueprint $table) {
+        Schema::create('image_views', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('video_id')->unsigned();
+            $table->integer('image_id')->unsigned();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateViewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('views');
+        Schema::dropIfExists('image_views');
     }
 }

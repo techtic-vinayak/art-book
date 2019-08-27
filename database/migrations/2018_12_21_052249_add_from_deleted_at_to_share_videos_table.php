@@ -13,7 +13,7 @@ class AddFromDeletedAtToShareVideosTable extends Migration
      */
     public function up()
     {
-        Schema::table('share_videos', function (Blueprint $table) {
+        Schema::table('share_images', function (Blueprint $table) {
             $table->timestamp('to_deleted_at')->nullable()->after('from_user_id');
             $table->timestamp('from_deleted_at')->nullable()->after('to_deleted_at');
         });
@@ -26,7 +26,7 @@ class AddFromDeletedAtToShareVideosTable extends Migration
      */
     public function down()
     {
-        Schema::table('share_videos', function (Blueprint $table) {
+        Schema::table('share_images', function (Blueprint $table) {
             //
         });
     }
