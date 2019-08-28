@@ -11,6 +11,21 @@ use App\Http\Controllers\Controller;
  */
 class ArtController extends Controller
 {
+    public function index()
+    {
+         $user          = \Auth::user();
+        
+        if ($user) {
+            $art = Art::where('user_id',$user->id)->get();
+            return response()->json([
+                    'status_code' => 200,
+                    'data'        => $art,
+            ]);
+        } else {
+            return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
+        }
+
+    }
     
     /**
      * Add video with share

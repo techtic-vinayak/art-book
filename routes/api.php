@@ -27,6 +27,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('change-password', 'UserController@changePassword');
     Route::get('user', 'UserController@getAuthenticatedUser');
 
+    Route::get('arts', 'ArtController@index');
     Route::post('add-art', 'ArtController@addArt');
     Route::post('edit-art', 'ArtController@editArt');
     Route::get('art/{id}', 'ArtController@detailArt');
