@@ -4,7 +4,7 @@
     </IfModule>
 
     RewriteEngine On
-    RewriteBase /shift/
+    RewriteBase /art-book/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
