@@ -26,8 +26,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('update-profile', 'UserController@updateProfile');
     Route::post('change-password', 'UserController@changePassword');
     Route::get('user', 'UserController@getAuthenticatedUser');
-    Route::post('add-video', 'VideoController@addVideo');
-    Route::post('video-list', 'VideoController@videoList');
+
+    Route::post('add-art', 'ArtController@addArt');
+    Route::post('edit-art', 'ArtController@editArt');
+    Route::get('detail-art/{id}', 'ArtController@detailArt');
+
     Route::post('delete-video', 'VideoController@deleteVideo');
     Route::post('video-view', 'VideoController@addVideoView');
     Route::post('video-report', 'VideoController@addVideoReport');
