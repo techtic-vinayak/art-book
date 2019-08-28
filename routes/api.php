@@ -29,14 +29,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::post('add-art', 'ArtController@addArt');
     Route::post('edit-art', 'ArtController@editArt');
-    Route::get('detail-art/{id}', 'ArtController@detailArt');
-
-    Route::post('delete-video', 'VideoController@deleteVideo');
-    Route::post('video-view', 'VideoController@addVideoView');
-    Route::post('video-report', 'VideoController@addVideoReport');
-    Route::post('add-reply', 'ReplyController@addReply');
-    Route::get('reply-list', 'ReplyController@getListReply');
-    Route::get('near-by-users', 'UserController@nearByUser');
-    Route::post('phone-contacts', 'ContactController@getPhoneContacts');
-    Route::resource('contacts', 'ContactController', ['except' => ['edit', 'create', 'update']]);
+    Route::get('art/{id}', 'ArtController@detailArt');
+    Route::delete('art/{id}', 'ArtController@deleteArt');
+    
 });

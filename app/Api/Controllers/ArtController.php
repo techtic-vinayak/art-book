@@ -86,5 +86,19 @@ class ArtController extends Controller
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 401);
         }
     }
+
+    public function deleteArt($id)
+    {
+        $user = \Auth::user();
+        if ($user) {
+            $art = Art::destroy($id);
+            return response()->json([
+                'status_code'   => 200,
+                'message'       => 'Art has been deleted successfully'
+            ]);
+        } else {
+            return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 401);
+        }
+    }
     
 }
