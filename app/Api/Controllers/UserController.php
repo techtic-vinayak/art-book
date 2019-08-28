@@ -86,7 +86,10 @@ class UserController extends Controller
     {
         $user = User::where('email', $request->get('email'))->first();
         if (!$user) {
-            throw new \Exception("Entered email address not found.", 400);
+            return response()->json([
+                'status_code' => 400,
+                'message'     => 'Entered email address not found.',
+            ], 400);
         } else {
             $user->update(['remember_token' => str_random(10)]);
             $user['password'] = str_random(6);
