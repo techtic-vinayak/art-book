@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVideoTable extends Migration
+class CreateConnectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +12,13 @@ class CreateVideoTable extends Migration
      */
     public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('connections', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->string('caption')->nullable();
-            $table->string('image');
-            $table->string('request_type')->default('save');
+            $table->integer('sender_id');
+            $table->integer('receiver_id');
+            $table->enum('status', ['pendding', 'accepted', 'rejected']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -30,6 +29,6 @@ class CreateVideoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('images');
+        Schema::drop('connections');
     }
 }

@@ -2,10 +2,12 @@
 namespace App\Api\Controllers;
 
 use App\Api\Requests\ChangePasswordRequest;
-use App\Api\Requests\ForgetPasswordRequest;
-use App\Api\Requests\LoginRequest;
-use App\Api\Requests\NearByUserRequest;
+
 use App\Api\Requests\RegisterRequest;
+use App\Api\Requests\LoginRequest;
+use App\Api\Requests\ForgetPasswordRequest;
+use App\Api\Requests\NearByUserRequest;
+
 use App\Api\Requests\SetPasswordRequest;
 use App\Api\Requests\SocialRegisterRequest;
 use App\Api\Requests\UpdateRegisterRequest;
@@ -36,17 +38,12 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['status_code' => 400,
-                    'message'                              => 'Incorrect email address or password'], 400);
+                return response()->json([
+                    'status_code'   => 400,
+                    'message'       => 'Incorrect email address or password'], 400);
             }
             $user = \Auth::user();
-            // if (!$user) {
-            //     throw new \Exception("Sorry Please verify your email address.", 400);
-            // }
-            $user->device_type = $request->get('device_type', '');
-            $user->token       = $request->get('token', '');
-            $user->timezone    = $request->get('timezone', 'UTC');
-            $user->save();
+            $user->role = $user->roles()->first()->id;
             return response()->json([
                 'status_code' => '200',
                 'data'        => $user,
@@ -66,20 +63,41 @@ class UserController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $insert_data = $request->only([
-            'name', 'email', 'password', 'device_type', 'token', 'timezone', 'profile_pic', 'phone', 'address',
-            'latitude', 'longitude',
-        ]);
+        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ]);
 
         if ($insert_data['phone']) {
             $insert_data['phone'] = substr($insert_data['phone'], -10);
         }
+        if ($insert_data['dob']) {
+            $insert_data['dob'] = date('Y-m-d', strtotime($insert_data['dob']));
+        }
 
         $insert_data['password'] = Hash::make($insert_data['password']);
         $user                    = User::create($insert_data);
-        $user->roles()->sync(3);
+        $user->roles()->sync($request->role_id);
         $token = JWTAuth::fromUser($user);
+
         return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
+    }
+    /**
+     * Forget Password
+     */
+    public function forgetPassword(ForgetPasswordRequest $request)
+    {
+        $user = User::where('email', $request->get('email'))->first();
+        if (!$user) {
+            throw new \Exception("Entered email address not found.", 400);
+        } else {
+            $user->update(['remember_token' => str_random(10)]);
+            $user['password'] = str_random(6);
+            $hash_password    = Hash::make($user['password']);
+            $user->notify(new ForgetPasswordNotification($user));
+            $password_update = User::where('id', $user->id)->update(['password' => $hash_password]);
+            return response()->json([
+                'status_code' => '200',
+                'message'     => 'Please check your email address to reset password.',
+            ]);
+        }
     }
     /**
      * Social Media Register
@@ -91,32 +109,37 @@ class UserController extends Controller
      */
     public function socialMediaRegister(SocialRegisterRequest $request)
     {
-        $user      = User::where('social_media_id', $request->get('social_media_id'))->first();
+        $user      = User::where('social_media_id', $request->get('social_media_id'))->where('social_media_type', $request->get('social_media_type'))
+            ->first();
         $not_found = true;
         if ($user) {
             $not_found         = false;
-            $user->device_type = $request->get('device_type', '');
-            $user->token       = $request->get('token', '');
             $user->timezone    = $request->get('timezone', 'UTC');
             $user->save();
         }
         $user = User::where('email', $request->get('email'))->first();
         if ($user && $not_found) {
-            $not_found             = false;
-            $user->device_type     = $request->get('device_type', '');
-            $user->token           = $request->get('token', '');
-            $user->timezone        = $request->get('timezone', 'UTC');
-            $user->social_media_id = $request->get('social_media_id', '');
+            $not_found                  = false;
+            $user->social_media_type    = $request->get('social_media_type');
+            $user->social_media_id      = $request->get('social_media_id');
+            $user->timezone             = $request->get('timezone', 'UTC');
             $user->save();
         }
-        $insert_data = $request->only([
-            'name', 'email', 'device_type', 'token', 'timezone', 'profile_pic', 'phone', 'address', 'social_media_id',
-            'latitude', 'longitude',
-        ]);
+
+        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ]);
+
+        if ($insert_data['phone']) {
+            $insert_data['phone'] = substr($insert_data['phone'], -10);
+        }
+        if ($insert_data['dob']) {
+            $insert_data['dob'] = date('Y-m-d', strtotime($insert_data['dob']));
+        }
+
+        $token = JWTAuth::fromUser($user);
         if ($not_found) {
-            $insert_data['password'] = Hash::make(random_int(1000000, 9999999));
+            $insert_data['password'] = Hash::make($insert_data['password']);
             $user                    = User::create($insert_data);
-            $user->roles()->sync(3);
+            $user->roles()->sync($request->role_id);
         }
         $token = JWTAuth::fromUser($user);
         return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
@@ -137,27 +160,7 @@ class UserController extends Controller
             'data'         => ['users' => $user,'nearby_users' => $users->count()]
         ], 200);
     }
-    /**
-     * Forget Password
-     */
-    public function forgetPassword(ForgetPasswordRequest $request)
-    {
-        $user = User::where('email', $request->get('email'))->first();
-        if (!$user) {
-            throw new \Exception("Entered email address not found.", 400);
-        } else {
-            $user->update(['remember_token' => str_random(10)]);
-            // $user['link'] = Config::get('app.url') . '/set-password/'.$user->email.'/'.$user->remember_token;
-            $user['password'] = str_random(6);
-            $hash_password    = Hash::make($user['password']);
-            $user->notify(new ForgetPasswordNotification($user));
-            $password_update = User::where('id', $user->id)->update(['password' => $hash_password]);
-            return response()->json([
-                'status_code' => '200',
-                'message'     => 'Please check your email address to reset password.',
-            ]);
-        }
-    }
+    
     /**
      * Reset Password
      */
@@ -185,39 +188,36 @@ class UserController extends Controller
      *  "token" : "$token"
      * }
      */
-    public function updateProfile(UpdateRegisterRequest $request)
+    public function updateProfile(Request $request)
     {
         $user = \Auth::user();
         if ($user) {
-            $user->name        = $request->get('name', '');
-            $user->profile_pic = $request->file('profile_pic');
-            $user->phone       = $request->get('phone', '');
-            $user->address     = $request->get('address', '');
-            $user->device_type = $request->get('device_type', '');
-            $user->timezone    = $request->get('timezone', 'UTC');
-            $user->token       = $request->get('token', '');
-            $user->longitude   = $request->get('longitude', '');
-            $user->latitude    = $request->get('latitude', '');
-
-            if ($user->phone) {
-                $user->phone = substr($user->phone, -10);
+            $fields = ['name', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ];
+            foreach ($fields as $key => $field) {
+                if ($request->exists($field)) {
+                    switch ($field) {
+                        case 'dob':
+                        $user->$field = date('Y-m-d', strtotime($request->dob));
+                        break;
+       
+                        default:
+                        $user->$field = $request->$field;
+                        break;
+                    }
+                }
             }
             $user->save();
-            $radius = $request->get('radius', 100);
-            $users = User::nearBy(['longitude'=> $user->longitude, 'latitude'=>
-            $user->latitude], $radius)->has('video')->get();
-
             return response()->json([
-                'status_code'  => 200,
-                'data'         => $user,
-                'nearby_users' => $users->count(),
-                'message'      => 'Profile has been updated.',
-            ], 200);
+                'status_code'   => 200,
+                'data'          => $user,
+                'message'       => 'User has been Updated successfully'
+            ]);
+         
         } else {
             return response()->json([
-                'status_code' => 400,
-                'message'     => 'Invalid user id.',
-            ], 400);
+                'status_code' => 401,
+                'message'     => 'Invalid user.',
+            ], 401);
         }
     }
 
@@ -231,20 +231,24 @@ class UserController extends Controller
      */
     public function changePassword(ChangePasswordRequest $request)
     {
-        $update_data = $request->only([
-            'user_id', 'old_password', 'password']);
-        $user = User::where('id', $request->get('user_id'))->first();
+
+        $user = \Auth::user();
         if ($user) {
-            if (Hash::check($update_data['old_password'], $user->password)) {
-                $user->password = Hash::make($update_data['password']);
+            if (Hash::check($request->old_password, $user->password)) {
+                $user->password = Hash::make($request->password);
                 $user->save();
                 return response()->json(['status_code' => 200, 'message' => 'Password has been updated.'], 200);
             } else {
                 return response()->json(['status_code' => 400, 'message' => 'Entered old password is incorrect.'], 400);
             }
+
         } else {
-            return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
+            return response()->json([
+                'status_code' => 401,
+                'message'     => 'Invalid user.',
+            ], 401);
         }
+        
     }
 
     /**

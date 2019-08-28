@@ -1,8 +1,10 @@
 <?php
+
 use Illuminate\Database\Seeder;
 use App\Models\RoleHasPermissions;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Model;
+
 class RolesTableSeeder extends Seeder
 {
    /**
@@ -19,18 +21,23 @@ class RolesTableSeeder extends Seeder
         }
         $data = array(
         	[
-        		'name'=> 'Super Admin',
-        		'guard_name'=> 'super-admin',
-        	],
-        	[
         		'name'=> 'Admin',
         		'guard_name'=> 'admin',
         	],
         	[
-        		'name'=> 'Users',
-        		'guard_name'=> 'users',
+        		'name'=> 'Artist',
+        		'guard_name'=> 'artist',
         	],
+        	[
+        		'name'=> 'Art Lover',
+        		'guard_name'=> 'art_lover',
+        	],
+          [
+            'name'=> 'Both',
+            'guard_name'=> 'both',
+          ],
         );
+        
         Role::insert($data);
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
    }

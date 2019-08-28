@@ -16,8 +16,8 @@ class SocialRegisterRequest extends Request
             'phone'           => 'max:20',
             'address'         => 'string|max:150',
             'latitude'        => 'required',
-            'longitude'       => 'required',
-            'social_media_id' => 'required|string|max:255',
+            'social_media_type' => 'required',
+            'social_media_id'   => 'required|string|max:255',
         ];
     }
 }

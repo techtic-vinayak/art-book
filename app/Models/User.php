@@ -16,19 +16,6 @@ class User extends Authenticatable implements JWTSubject
     use HasRoles;
     use FileUploadTrait;
 
-    protected $casts = [
-        'name'        => 'string',
-        'profile_pic' => 'string',
-        "device_type" => "string",
-        "status"      => "string",
-        "token"       => "string",
-        "timezone"    => "string",
-        "phone"       => "string",
-        "address"     => "string",
-        "latitude"    => "string",
-        "longitude"   => "string",
-    ];
-
     /**
      * The attributes that are mass assignable.
      *
@@ -47,6 +34,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token', 'email_verified_at',
     ];
+
     public function routeNotificationForFcm($notification)
     {
         return $this->token;
@@ -67,21 +55,16 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function getProfilePicAttribute()
-    {
-        if (!empty($this->attributes['profile_pic'])) {
-            return $this->getFileUrl($this->attributes['profile_pic']);
-        }
-        return "";
-    }
     public function setProfilePicAttribute($value)
     {
-        $this->saveFile($value, 'profile_pic', 'user');
+        $this->saveFile($value, 'profile_pic', "user/" . date('Y/m'));
     }
-
-    public function contacts()
+    
+    public function getProfilePicAttribute($value)
     {
-        return $this->belongsToMany(User::class, 'contacts', 'user_id', 'contact_id')->withTimestamps();
+        if (!empty($value)) {
+            return $this->getFileUrl($value);
+        }
     }
 
     public function getJWTIdentifier()
@@ -93,18 +76,5 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-
-    public function views()
-    {
-        return $this->belongsToMany(Video::class, 'video_views');
-    }
-
-    public function reports()
-    {
-        return $this->belongsToMany(Video::class, 'video_reports');
-    }
-    public function video()
-    {
-        return $this->hasMany('App\Models\Video')->where('video_type', 'public');
-    }
+    
 }

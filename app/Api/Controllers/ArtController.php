@@ -21,39 +21,14 @@ use Carbon\Carbon;
 /**
  * @resource Contact
  */
-class VideoController extends Controller
+class ArtController extends Controller
 {
-    public function authenticate(LoginRequest $request)
-    {
-        $credentials = $request->only('email', 'password');
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['status_code' => 400, 'message' => 'Invalid credentials'], 400);
-            }
-            $user = \Auth::user();
-            // if (!$user) {
-            //     throw new \Exception("Sorry Please verify your email address.", 400);
-            // }
-            $user->device_type = $request->get('device_type', '');
-            $user->token       = $request->get('token', '');
-            $user->timezone    = $request->get('timezone', 'UTC');
-            $user->save();
-            return response()->json([
-                'status_code' => '200',
-                'data'        => $user,
-                'token'       => $token,
-            ]);
-        } catch (JWTException $e) {
-            return response()->json(['status_code' => 500, 'message' => 'Could not create token'], 500);
-        }
-    }
+    
     /**
      * Add video with share
      */
-    public function addVideo(AddVideoRequest $request)
+    public function addArt(AddVideoRequest $request)
     {
-        $contact_ids   = $request->get('contact_id');
-        $contact_array = explode(',', $contact_ids);
         $user          = \Auth::user();
         if ($user) {
             $add_video = array('user_id' => $user->id,

@@ -19,13 +19,16 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('device_type')->nullable();
-            $table->string('status',15)->default('pending');
-            $table->string('token',500)->nullable();
-            $table->string('timezone')->default('UTC');
-            $table->string('profile_pic')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+            $table->date('dob')->nullable();
+            $table->string('country')->nullable();
+            $table->string('profile_pic')->nullable();
+            $table->string('user_type')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('status')->default('active');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -41,3 +44,4 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('users');
     }
 }
+ 

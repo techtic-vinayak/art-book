@@ -23,6 +23,7 @@
         "laravel/tinker": "^1.0",
         "mpociot/laravel-apidoc-generator": "2.*",
         "phpro/grumphp": "^0.14.2",
+        "spatie/laravel-permission": "^2.37",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

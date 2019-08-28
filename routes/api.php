@@ -16,14 +16,15 @@ return $request->user();
 }); */
 
 Route::post('login', 'UserController@authenticate');
-Route::post('register', 'UserController@register');
-Route::post('social-media-register', 'UserController@socialMediaRegister');
+Route::post('sign-up', 'UserController@register');
 Route::post('forget-password', 'UserController@forgetPassword');
+Route::post('social-media-register', 'UserController@socialMediaRegister');
 Route::post('set-password', 'UserController@setPassword');
-Route::post('change-password', 'UserController@changePassword');
+
 
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('update-profile', 'UserController@updateProfile');
+    Route::post('change-password', 'UserController@changePassword');
     Route::get('user', 'UserController@getAuthenticatedUser');
     Route::post('add-video', 'VideoController@addVideo');
     Route::post('video-list', 'VideoController@videoList');
