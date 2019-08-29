@@ -65,10 +65,10 @@ class UserController extends Controller
     {
         $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ]);
 
-        if ($insert_data['phone']) {
+        if (isset($insert_data['phone']) && !empty($insert_data['phone'])) {
             $insert_data['phone'] = substr($insert_data['phone'], -10);
         }
-        if ($insert_data['dob']) {
+        if (isset($insert_data['dob'])) {
             $insert_data['dob'] = date('Y-m-d', strtotime($insert_data['dob']));
         }
 
