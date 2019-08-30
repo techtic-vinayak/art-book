@@ -21,8 +21,10 @@ Route::post('forget-password', 'UserController@forgetPassword');
 Route::post('social-media-register', 'UserController@socialMediaRegister');
 Route::post('set-password', 'UserController@setPassword');
 
-Route::get('/login/{social}','UserController@socialLogin')->where('social','twitter|facebook|google');
-Route::get('/login/{social}/callback','UserController@handleProviderCallback')->where('social','twitter|facebook|google|github|bitbucket');
+
+
+Route::get('login/{social}', 'UserController@socialLogin');
+Route::get('login/{social}/callback', 'UserController@handleProviderCallback');
 
 
 Route::group(['middleware' => ['jwt.verify']], function () {

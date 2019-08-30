@@ -205,17 +205,13 @@ class UserController extends Controller
 
         $provider = $request->provider;
         $provider_id = $request->access_token;
+        $access_token_secret = $request->access_token_secret;
 
         if($provider == 'twitter'){
-            $userData = Socialite::driver($provider)->userFromTokenAndSecret($provider_id,config('service.twitter.client_secret'));
-         
-     }else{
-        $userData = Socialite::driver('snapchat')->userFromToken($provider_id);
-       
-     }
-     dd($userData);
-
-      
+            $userData = Socialite::driver($provider)->userFromTokenAndSecret($provider_id, $access_token_secret);
+        }else{
+            $userData = Socialite::driver($provider)->userFromToken($provider_id);
+        }
         
         $email=$userData->getEmail();
         $name=$userData->getName();
@@ -296,8 +292,8 @@ class UserController extends Controller
     * @return Response
     */
     public function handleProviderCallback($social)
-    {
-       $userSocial = Socialite::driver($social)->user();
+    { 
+       $userSocial = Socialite::driver($social)->stateless()->user();
        dd($userSocial);
        $user = User::where(['email' => $userSocial->getEmail()])->first();
        if($user){
