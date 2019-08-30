@@ -19,6 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\LinkedSocialAccount;
+
 
 /**
  * @resource Auth
@@ -63,7 +66,7 @@ class UserController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ]);
+        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' ]);
 
         if (isset($insert_data['phone']) && !empty($insert_data['phone'])) {
             $insert_data['phone'] = substr($insert_data['phone'], -10);
@@ -74,6 +77,7 @@ class UserController extends Controller
 
         $insert_data['password'] = Hash::make($insert_data['password']);
         $user                    = User::create($insert_data);
+        $user = User::find($user->id);
         $user->roles()->sync($request->role_id);
         $token = JWTAuth::fromUser($user);
 
@@ -103,51 +107,6 @@ class UserController extends Controller
         }
     }
     /**
-     * Social Media Register
-     * @response {
-     *  "status_code" : "200",
-     *  "data" : "$user",
-     *  "token" : "$token"
-     * }
-     */
-    public function socialMediaRegister(SocialRegisterRequest $request)
-    {
-        $user      = User::where('social_media_id', $request->get('social_media_id'))->where('social_media_type', $request->get('social_media_type'))
-            ->first();
-        $not_found = true;
-        if ($user) {
-            $not_found         = false;
-            $user->timezone    = $request->get('timezone', 'UTC');
-            $user->save();
-        }
-        $user = User::where('email', $request->get('email'))->first();
-        if ($user && $not_found) {
-            $not_found                  = false;
-            $user->social_media_type    = $request->get('social_media_type');
-            $user->social_media_id      = $request->get('social_media_id');
-            $user->timezone             = $request->get('timezone', 'UTC');
-            $user->save();
-        }
-
-        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ]);
-
-        if ($insert_data['phone']) {
-            $insert_data['phone'] = substr($insert_data['phone'], -10);
-        }
-        if ($insert_data['dob']) {
-            $insert_data['dob'] = date('Y-m-d', strtotime($insert_data['dob']));
-        }
-
-        $token = JWTAuth::fromUser($user);
-        if ($not_found) {
-            $insert_data['password'] = Hash::make($insert_data['password']);
-            $user                    = User::create($insert_data);
-            $user->roles()->sync($request->role_id);
-        }
-        $token = JWTAuth::fromUser($user);
-        return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
-    }
-    /**
      * Get Authenticated User
      */
     public function getAuthenticatedUser(Request $request)
@@ -163,26 +122,6 @@ class UserController extends Controller
             'data'         => ['users' => $user,'nearby_users' => $users->count()]
         ], 200);
     }
-    
-    /**
-     * Reset Password
-     */
-    public function setPassword(SetPasswordRequest $request)
-    {
-        $user = User::where(['email' => $request->get('email'), 'remember_token' => $request->get('token')])->first();
-        if (!$user) {
-            throw new \Exception("Sorry, please try again later.", 400);
-        } else {
-            $user->update(['remember_token' => '', 'password' => bcrypt($request->get('password'))]);
-            $user['subject'] = 'Reset Password';
-            $user['meg']     = 'Your password successfully updated.';
-            $user->notify(new UserNotification($user));
-            return response()->json([
-                'status_code' => '200',
-                'message'     => 'Your password successfully updated.',
-            ]);
-        }
-    }
     /**
      * Update Profile
      * @response {
@@ -195,7 +134,9 @@ class UserController extends Controller
     {
         $user = \Auth::user();
         if ($user) {
-            $fields = ['name', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender' ];
+            $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' ]);
+
+        
             foreach ($fields as $key => $field) {
                 if ($request->exists($field)) {
                     switch ($field) {
@@ -223,7 +164,6 @@ class UserController extends Controller
             ], 401);
         }
     }
-
     /**
      * Change Password
      * @response {
@@ -234,7 +174,6 @@ class UserController extends Controller
      */
     public function changePassword(ChangePasswordRequest $request)
     {
-
         $user = \Auth::user();
         if ($user) {
             if (Hash::check($request->old_password, $user->password)) {
@@ -251,9 +190,80 @@ class UserController extends Controller
                 'message'     => 'Invalid user.',
             ], 401);
         }
-        
     }
 
+    /**
+     * Social Media Register
+     * @response {
+     *  "status_code" : "200",
+     *  "data" : "$user",
+     *  "token" : "$token"
+     * }
+     */
+    public function socialMediaRegister(SocialRegisterRequest $request)
+    {
+
+        $provider = $request->provider;
+        $provider_id = $request->access_token;
+
+        if($provider == 'twitter'){
+            $userData = Socialite::driver($provider)->userFromTokenAndSecret($provider_id,config('service.twitter.client_secret'));
+         
+     }else{
+        $userData = Socialite::driver('snapchat')->userFromToken($provider_id);
+       
+     }
+     dd($userData);
+
+      
+        
+        $email=$userData->getEmail();
+        $name=$userData->getName();
+
+        $linkedSocialAccount =LinkedSocialAccount::where('provider_name', $provider)
+            ->where('provider_id', $provider_id)->first();
+
+        if ($linkedSocialAccount) {
+            $user = $linkedSocialAccount->user;
+        } else {
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                $user = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                ]);
+                $user = User::find($user->id);
+            }
+            $user->linkedSocialAccounts()->create([
+                'provider_id' => $provider_id,
+                'provider_name' => $provider,
+            ]);
+        }
+
+        $token = JWTAuth::fromUser($user);
+        return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
+    }
+    
+    
+    /**
+     * Reset Password
+     */
+    public function setPassword(SetPasswordRequest $request)
+    {
+        $user = User::where(['email' => $request->get('email'), 'remember_token' => $request->get('token')])->first();
+        if (!$user) {
+            throw new \Exception("Sorry, please try again later.", 400);
+        } else {
+            $user->update(['remember_token' => '', 'password' => bcrypt($request->get('password'))]);
+            $user['subject'] = 'Reset Password';
+            $user['meg']     = 'Your password successfully updated.';
+            $user->notify(new UserNotification($user));
+            return response()->json([
+                'status_code' => '200',
+                'message'     => 'Your password successfully updated.',
+            ]);
+        }
+    }
     /**
      * Near By User
      * @response {
@@ -273,5 +283,28 @@ class UserController extends Controller
             'status_code' => 200,
             'data'        => $users,
         ]);
+    }
+
+    public function socialLogin($social)
+    {
+        dd(Socialite::driver($social));
+       return Socialite::driver($social)->redirect();
+    }
+    /**
+    * Obtain the user information from Social Logged in.
+    * @param $social
+    * @return Response
+    */
+    public function handleProviderCallback($social)
+    {
+       $userSocial = Socialite::driver($social)->user();
+       dd($userSocial);
+       $user = User::where(['email' => $userSocial->getEmail()])->first();
+       if($user){
+           Auth::login($user);
+           return redirect()->action('HomeController@index');
+       }else{
+           return view('auth.register',['name' => $userSocial->getName(), 'email' => $userSocial->getEmail()]);
+       }
     }
 }

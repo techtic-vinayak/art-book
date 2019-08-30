@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\FileUploadTrait;
 use Backpack\CRUD\CrudTrait;
+use App\Models\LinkedSocialAccount;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -54,6 +55,16 @@ class User extends Authenticatable implements JWTSubject
             $query->whereNotNull('longitude');
         }
     }
+    
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     public function setProfilePicAttribute($value)
     {
@@ -67,14 +78,8 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function getJWTIdentifier()
+    public function linkedSocialAccounts()
     {
-        return $this->getKey();
+        return $this->hasMany(LinkedSocialAccount::class);
     }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-    
 }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Traits\FileUploadTrait;
 use Backpack\CRUD\CrudTrait;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 class User extends Authenticatable implements JWTSubject
 {

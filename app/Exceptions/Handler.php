@@ -54,9 +54,19 @@ class Handler extends ExceptionHandler
             }
             if ($exception instanceof \Illuminate\Validation\ValidationException) {
                 $messages     = $exception->errors();
-               
-                $response['messages']    = $messages;
+
+                $new_messages = [];
+
+                foreach (array_values($messages) as $key => $message) {
+                    $new_messages = array_merge($new_messages, $message);
+                }
+
+                $response['message']    = implode(', ', $new_messages);
+                $response['message']    = $new_messages[0];
                 $response['status_code'] = 400;
+               
+                /*$response['messages']    = $messages;
+                $response['status_code'] = 400;*/
             } else {
                 $response['message'] = $exception->getMessage();
                 if (env('APP_DEBUG', true)) {
