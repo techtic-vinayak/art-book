@@ -41,6 +41,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::post('send', 'ContactController@sendRequest');
     Route::post('respond', 'ContactController@acknowledgeRequest');
+    Route::post('pendding', 'ContactController@penddingRequest');
     
     
 });
