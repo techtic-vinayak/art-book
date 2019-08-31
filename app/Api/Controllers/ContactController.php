@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Connection;
 use App\Api\Requests\SendRequest;
 use App\Api\Requests\AcknowledgeRequest;
+use App\Api\Requests\PenddingRequest;
 
 /**
  * @resource Contact
@@ -74,18 +75,37 @@ class ContactController extends Controller
         }
     }
 
-    /**
-     * Get Contact
-     */
-    public function show($id)
+    public function penddingRequest(PenddingRequest $request)
     {
-        $contact = \Auth::user()->contacts()->wherePivot('contact_id', $id)->first();
-        return response()->json([
-            'status_code' => 200,
-            'data'        => $contact,
-        ], 200);
-    }
+        $user_id = \Auth::id();
+        $flag =$request->get('flag');
+        if ($flag == 'sent'){
+            $connection = Connection::where('sender_id' , $user_id)
+                        ->where('status','pendding')
+                        ->first();
 
+        }else if ($flag == 'recevied'){
+            $connection = Connection::where('receiver_id' , $user_id)
+                        ->where('status','pendding')
+                        ->first();
+        }
+        if(!empty($connection)){
+            return response()->json([
+                'status_code' => 200,
+                'data'        => $connection,
+            ], 200);
+
+        }
+       
+        return response()->json([
+            'status_code' => 400,
+             'message'     => 'Not found any request.'
+        ], 400);
+        
+
+        
+
+    }
     /**
      * Update Contact
      */

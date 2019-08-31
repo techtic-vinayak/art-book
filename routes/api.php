@@ -42,6 +42,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('send', 'ContactController@sendRequest');
     Route::post('respond', 'ContactController@acknowledgeRequest');
 
+    Route::post('pendding', 'ContactController@penddingRequest');
+
     Route::get('block-users', 'UserStatusController@index');
     Route::post('block', 'UserStatusController@blockUser');
     Route::get('unblock/{id}', 'UserStatusController@unblockUser');
