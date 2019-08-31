@@ -2,11 +2,11 @@
 
 namespace App\Api\Controllers;
 
-use App\Api\Requests\AddContactRequest;
-use App\Api\Requests\GetPhoneContactsRequest;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Connection;
+use App\Api\Requests\SendRequest;
+use App\Api\Requests\AcknowledgeRequest;
 
 /**
  * @resource Contact
@@ -16,34 +16,62 @@ class ContactController extends Controller
     /**
      * Get contacts
      */
-    public function index()
+    public function sendRequest(SendRequest $request)
     {
-        $contacts = \Auth::user()->contacts;
-        return response()->json([
-            'status_code' => 200,
-            'data'        => $contacts,
-        ], 200);
+        $user_id = \Auth::id();
+        $connected = Connection::where('sender_id' , $user_id)
+                        ->where('receiver_id', $request->get('receiver_id'))
+                        ->count();
+
+        if($connected == 0){
+            $connection = Connection::create([ 
+                'sender_id' => $user_id,
+                'receiver_id' => $request->get('receiver_id'),
+                'status' => 'pendding'
+            ]);
+            return response()->json([
+                'status_code' => 200,
+                'data'        => $connection,
+                'message'     => 'Request send successfully.'
+            ], 200);
+        }else{
+            return response()->json([
+                'status_code' => 400,
+                 'message'     => 'Already sent Request.'
+            ], 400);
+        }
     }
 
-    /**
-     * Add Contact
-     * @response {
-     *  "status_code" : "200",
-     *  "data" : "$user",
-     *  "message" : "Contact successfully added."
-     * }
-     */
-    public function store(AddContactRequest $request)
+    public function acknowledgeRequest(AcknowledgeRequest $request)
     {
-        $contact_id = $request->get('contact_id');
-        $user       = \Auth::user();
-        $user->contacts()->attach($contact_id);
-        $contact = $user->contacts()->wherePivot('contact_id', $contact_id)->first();
-        return response()->json([
-            'status_code' => 200,
-            'data'        => $contact,
-            'message'     => 'Contact successfully added.',
-        ], 200);
+        $user_id = \Auth::id();
+
+        $connection = Connection::where('receiver_id' , $user_id)
+                        ->where('status','pendding')
+                        ->find($request->get('request_id'));
+        
+        if( !empty($connection) ){
+            if( ($request->get('status') == 'accepted') || ($request->get('status') == 'rejected') ){
+                $connection->status = $request->get('status');
+                $connection->save();
+                return response()->json([
+                    'status_code' => 200,
+                    'data'        => $connection,
+                ], 200);
+
+            } else if ($request->get('status') == 'cancel') {
+                $connection->forceDelete();
+                return response()->json([
+                    'status_code' => 400,
+                    'message'        => 'Request cancel successfully',
+                ], 400);
+            }
+        }else{
+            return response()->json([
+                'status_code' => 400,
+                 'message'     => 'Not found pendding request.'
+            ], 400);
+        }
     }
 
     /**

@@ -14,8 +14,8 @@ class AddAboutUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->text("about",500)->nuallable();
-            $table->string("cover_img")->nuallable();
+            $table->text("about",500)->nullable();
+            $table->string("cover_img")->nullable();
         });
     }
 
