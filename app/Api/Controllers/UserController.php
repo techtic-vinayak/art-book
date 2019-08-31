@@ -134,7 +134,7 @@ class UserController extends Controller
     {
         $user = \Auth::user();
         if ($user) {
-            $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' ]);
+            $fields = ['name', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' , 'about', 'cover_img'];
 
         
             foreach ($fields as $key => $field) {

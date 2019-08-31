@@ -68,6 +68,20 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+
+    public function setCoverImgAttribute($value)
+    {
+        $this->saveFile($value, 'cover_img', "user/" . date('Y/m'));
+    }
+    
+    public function getCoverImgAttribute($value)
+    {
+        if (!empty($value)) {
+            return $this->getFileUrl($value);
+        }
+        return '';
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
