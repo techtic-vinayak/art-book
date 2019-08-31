@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FileUploadTrait;
 use Backpack\CRUD\CrudTrait;
 use App\Models\LinkedSocialAccount;
+use App\Models\UserStatus;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -94,5 +95,10 @@ class User extends Authenticatable implements JWTSubject
     public function linkedSocialAccounts()
     {
         return $this->hasMany(LinkedSocialAccount::class);
+    }
+
+    public function blockUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_status', 'user_id', 'block_user_id');
     }
 }
