@@ -32,13 +32,13 @@ class UserStatusController extends Controller
      */
     public function blockUser(BlockRequest $request)
     {
-        $user          = \Auth::user();
+        $user  = \Auth::user();
 
         if ($user) {
             
-            $user = UserStatus::updateOrCreate(['user_id' => $user->id,
-                'block_user_id' => $request->get('block_user_id')], ['user_id' => $user->id,
-                'block_user_id' => $request->get('block_user_id')]);
+            $user = UserStatus::updateOrCreate(
+                ['user_id' => $user->id,'block_user_id' => $request->get('block_user_id')],
+                ['user_id' => $user->id,'block_user_id' => $request->get('block_user_id')]);
 
             return response()->json([
                     'status_code' => 200,

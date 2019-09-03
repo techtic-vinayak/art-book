@@ -92,8 +92,14 @@ class User extends Authenticatable implements JWTSubject
 
     public function following()
     {
-        return $this->hasMany(Connection::class,'sender_id');
+        return $this->hasMany(Connection::class,'sender_id')->where('status','accepted');
     }
+
+    public function follower()
+    {
+        return $this->hasMany(Connection::class,'receiver_id')->where('status','accepted');
+    }
+
 
     public function blockUsers()
     {
