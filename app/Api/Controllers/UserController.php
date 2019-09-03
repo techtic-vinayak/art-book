@@ -2,17 +2,16 @@
 namespace App\Api\Controllers;
 
 use App\Api\Requests\ChangePasswordRequest;
-
 use App\Api\Requests\RegisterRequest;
 use App\Api\Requests\LoginRequest;
 use App\Api\Requests\ForgetPasswordRequest;
 use App\Api\Requests\NearByUserRequest;
-
 use App\Api\Requests\SetPasswordRequest;
 use App\Api\Requests\SocialRegisterRequest;
 use App\Api\Requests\UpdateRegisterRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Connection;
 use App\Notifications\ForgetPasswordNotification;
 use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
@@ -283,10 +282,19 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $user_id = \Auth::id();
-        dd($user_id);
-        $user = User::with('following.user')->find($user_id);
-        dd($user);
+        $user = User::with('following.followingUser','follower.followerUser')->find($user_id);
+        $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
+                        ->where('status','pendding')
+                        ->count();
 
+        $user['pendding_received_request'] = Connection::where('receiver_id' , $user_id)
+                        ->where('status','pendding')
+                        ->count();
+
+        return response()->json([
+                    'status_code' => 200,
+                    'data'        => $user,
+                ], 200);
     }
 
     /*

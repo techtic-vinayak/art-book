@@ -82,12 +82,12 @@ class ContactController extends Controller
         if ($flag == 'sent'){
             $connection = Connection::where('sender_id' , $user_id)
                         ->where('status','pendding')
-                        ->first();
+                        ->get();
 
         }else if ($flag == 'recevied'){
             $connection = Connection::where('receiver_id' , $user_id)
                         ->where('status','pendding')
-                        ->first();
+                        ->get();
         }
         if(!empty($connection)){
             return response()->json([

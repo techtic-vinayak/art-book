@@ -13,8 +13,15 @@ class Connection extends Model
     protected $guarded = ['id'];
     protected $hidden = ['updated_at', 'created_at', 'deleted_at'];
 
-    public function user()
+    public function followingUser()
     {
     	return $this->belongsTo(User::class,'receiver_id');
     }
+
+    public function followerUser()
+    {
+    	return $this->belongsTo(User::class,'sender_id');
+    }
+
+
 }
