@@ -202,7 +202,6 @@ class UserController extends Controller
      */
     public function socialMediaRegister(SocialRegisterRequest $request)
     {
-
         $provider = $request->provider;
         $provider_id = $request->access_token;
         $access_token_secret = $request->access_token_secret;
@@ -212,7 +211,6 @@ class UserController extends Controller
         }else{
             $userData = Socialite::driver($provider)->userFromToken($provider_id);
         }
-       // dd($userData);
         
         $email=$userData->getEmail();
         $name=$userData->getName();
@@ -282,20 +280,24 @@ class UserController extends Controller
         ]);
     }
 
+    public function getProfile(Request $request)
+    {
+        $user_id = \Auth::id();
+        dd($user_id);
+        $user = User::with('following.user')->find($user_id);
+        dd($user);
+
+    }
+
+    /*
     public function socialLogin($social)
     {
-        dd(Socialite::driver($social));
        return Socialite::driver($social)->redirect();
     }
-    /**
-    * Obtain the user information from Social Logged in.
-    * @param $social
-    * @return Response
-    */
+        
     public function handleProviderCallback($social)
     { 
        $userSocial = Socialite::driver($social)->stateless()->user();
-       dd($userSocial);
        $user = User::where(['email' => $userSocial->getEmail()])->first();
        if($user){
            Auth::login($user);
@@ -304,4 +306,5 @@ class UserController extends Controller
            return view('auth.register',['name' => $userSocial->getName(), 'email' => $userSocial->getEmail()]);
        }
     }
+    */
 }

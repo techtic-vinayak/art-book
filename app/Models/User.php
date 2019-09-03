@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Traits\FileUploadTrait;
 use Backpack\CRUD\CrudTrait;
 use App\Models\LinkedSocialAccount;
+use App\Models\UserStatus;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\Connection;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -23,15 +25,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $guarded = ['id'];
-    /*protected $fillable = [
-    'name', 'email', 'password',
-    ];*/
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
+    
     protected $hidden = [
         'password', 'remember_token', 'email_verified_at',
     ];
@@ -90,9 +84,20 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-
     public function linkedSocialAccounts()
     {
         return $this->hasMany(LinkedSocialAccount::class);
+    }
+
+
+    public function following()
+    {
+        return $this->hasMany(Connection::class,'sender_id');
+    }
+
+    public function blockUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_status', 'user_id', 'block_user_id');
+
     }
 }
