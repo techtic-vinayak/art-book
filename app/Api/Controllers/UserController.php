@@ -20,6 +20,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\LinkedSocialAccount;
+use DB; 
 
 
 /**
@@ -45,7 +46,7 @@ class UserController extends Controller
                     'message'       => 'Incorrect email address or password'], 400);
             }
             $user = \Auth::user();
-            $user->role = $user->roles()->first()->id;
+          
             return response()->json([
                 'status_code' => '200',
                 'data'        => $user,
@@ -295,6 +296,26 @@ class UserController extends Controller
                     'status_code' => 200,
                     'data'        => $user,
                 ], 200);
+    }
+
+    public function allUser(Request $request)
+    {   
+        $user_id = \Auth::id();
+      
+        $user = User::where('id','!=',$user_id)
+                    ->whereNotIn('id', DB::table('user_status')
+                                    ->select('block_user_id')
+                                    ->where('user_id',$user_id)
+                                    ->get()
+                                    ->toArray())
+                    ->with('following','follower')
+                    ->get();
+                   
+
+        return response()->json([
+            'status_code' => 200,
+            'data'        => $user,
+        ], 200);
     }
 
     /*
