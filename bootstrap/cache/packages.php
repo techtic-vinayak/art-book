@@ -1,4 +1,11 @@
 <?php return array (
+  'laravel/nexmo-notification-channel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Illuminate\\Notifications\\NexmoChannelServiceProvider',
+    ),
+  ),
   'backpack/base' => 
   array (
     'providers' => 
@@ -17,11 +24,11 @@
       'CRUD' => 'Backpack\\CRUD\\CrudServiceProvider',
     ),
   ),
-  'backpack/generators' => 
+  'backpack/pagemanager' => 
   array (
     'providers' => 
     array (
-      0 => 'Backpack\\Generators\\GeneratorsServiceProvider',
+      0 => 'Backpack\\PageManager\\PageManagerServiceProvider',
     ),
   ),
   'backpack/menucrud' => 
@@ -38,13 +45,6 @@
       0 => 'Backpack\\NewsCRUD\\NewsCRUDServiceProvider',
     ),
   ),
-  'backpack/pagemanager' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Backpack\\PageManager\\PageManagerServiceProvider',
-    ),
-  ),
   'backpack/permissionmanager' => 
   array (
     'providers' => 
@@ -59,32 +59,64 @@
       0 => 'Backpack\\Settings\\SettingsServiceProvider',
     ),
   ),
+  'mpociot/laravel-apidoc-generator' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Mpociot\\ApiDoc\\ApiDocGeneratorServiceProvider',
+    ),
+  ),
+  'backpack/generators' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Backpack\\Generators\\GeneratorsServiceProvider',
+    ),
+  ),
+  'laracasts/generators' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laracasts\\Generators\\GeneratorsServiceProvider',
+    ),
+  ),
+  'nunomaduro/collision' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    ),
+  ),
+  'nesbot/carbon' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Carbon\\Laravel\\ServiceProvider',
+    ),
+  ),
+  'laravel/slack-notification-channel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Illuminate\\Notifications\\SlackChannelServiceProvider',
+    ),
+  ),
+  'intervention/image' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Intervention\\Image\\ImageServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Image' => 'Intervention\\Image\\Facades\\Image',
+    ),
+  ),
   'barryvdh/laravel-elfinder' => 
   array (
     'providers' => 
     array (
       0 => 'Barryvdh\\Elfinder\\ElfinderServiceProvider',
-    ),
-  ),
-  'benwilkins/laravel-fcm-notification' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Benwilkins\\FCM\\FcmNotificationServiceProvider',
-    ),
-  ),
-  'beyondcode/laravel-dump-server' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'BeyondCode\\DumpServer\\DumpServerServiceProvider',
-    ),
-  ),
-  'coderello/laravel-passport-social-grant' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Coderello\\SocialGrant\\Providers\\SocialGrantServiceProvider',
     ),
   ),
   'creativeorange/gravatar' => 
@@ -112,17 +144,6 @@
       0 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
     ),
   ),
-  'intervention/image' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Intervention\\Image\\ImageServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Image' => 'Intervention\\Image\\Facades\\Image',
-    ),
-  ),
   'jenssegers/date' => 
   array (
     'providers' => 
@@ -134,71 +155,11 @@
       'Date' => 'Jenssegers\\Date\\Date',
     ),
   ),
-  'laracasts/generators' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laracasts\\Generators\\GeneratorsServiceProvider',
-    ),
-  ),
-  'laravel/nexmo-notification-channel' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Illuminate\\Notifications\\NexmoChannelServiceProvider',
-    ),
-  ),
-  'laravel/passport' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Passport\\PassportServiceProvider',
-    ),
-  ),
-  'laravel/slack-notification-channel' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Illuminate\\Notifications\\SlackChannelServiceProvider',
-    ),
-  ),
-  'laravel/socialite' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Socialite\\SocialiteServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Socialite' => 'Laravel\\Socialite\\Facades\\Socialite',
-    ),
-  ),
   'laravel/tinker' => 
   array (
     'providers' => 
     array (
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
-    ),
-  ),
-  'mpociot/laravel-apidoc-generator' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Mpociot\\ApiDoc\\ApiDocGeneratorServiceProvider',
-    ),
-  ),
-  'nesbot/carbon' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Carbon\\Laravel\\ServiceProvider',
-    ),
-  ),
-  'nunomaduro/collision' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
   'prologue/alerts' => 
@@ -210,13 +171,6 @@
     'aliases' => 
     array (
       'Alert' => 'Prologue\\Alerts\\Facades\\Alert',
-    ),
-  ),
-  'socialiteproviders/manager' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'SocialiteProviders\\Manager\\ServiceProvider',
     ),
   ),
   'spatie/laravel-permission' => 
@@ -236,6 +190,52 @@
     'providers' => 
     array (
       0 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
+    ),
+  ),
+  'beyondcode/laravel-dump-server' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'BeyondCode\\DumpServer\\DumpServerServiceProvider',
+    ),
+  ),
+  'laravel/passport' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Passport\\PassportServiceProvider',
+    ),
+  ),
+  'coderello/laravel-passport-social-grant' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Coderello\\SocialGrant\\Providers\\SocialGrantServiceProvider',
+    ),
+  ),
+  'laravel/socialite' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Socialite\\SocialiteServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Socialite' => 'Laravel\\Socialite\\Facades\\Socialite',
+    ),
+  ),
+  'socialiteproviders/manager' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'SocialiteProviders\\Manager\\ServiceProvider',
+    ),
+  ),
+  'benwilkins/laravel-fcm-notification' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Benwilkins\\FCM\\FcmNotificationServiceProvider',
     ),
   ),
 );
