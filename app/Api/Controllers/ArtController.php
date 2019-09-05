@@ -16,7 +16,7 @@ class ArtController extends Controller
          $user          = \Auth::user();
         
         if ($user) {
-            $art = Art::where('user_id',$user->id)->get();
+            $art = Art::where('user_id',$user->id)->orderBy('id','DESC')->get();
             return response()->json([
                     'status_code' => 200,
                     'data'        => $art,
