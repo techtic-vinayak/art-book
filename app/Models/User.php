@@ -29,6 +29,8 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token', 'email_verified_at',
     ];
+ 
+    protected $appends = [ 'user_role' ];
 
     public function routeNotificationForFcm($notification)
     {
@@ -60,6 +62,16 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function getUserRoleAttribute()
+    {
+        $role = $this->roles()->first();
+        if($role){
+            return $role->id;
+        }else{
+            return null;
+        }
+    }
+
     public function setProfilePicAttribute($value)
     {
         $this->saveFile($value, 'profile_pic', "user/" . date('Y/m'));
@@ -88,6 +100,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(LinkedSocialAccount::class);
     }
+
 
 
     public function following()
