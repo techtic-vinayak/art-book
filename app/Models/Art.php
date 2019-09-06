@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use App\Scopes\EventScope;
 
 class Art extends Model
 {
@@ -12,8 +13,15 @@ class Art extends Model
 
     protected $table   = "art";
     protected $guarded = ['id'];
-    protected $appends = ['category_name'];
+    //protected $appends = ['category_name'];
+    protected $with = ['categoryData','sizeData'];
 
+    /*protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new EventScope);
+    }*/
 
     public function getPantingSizeAttribute()
     {
@@ -22,9 +30,7 @@ class Art extends Model
 
     public function getCategoryNameAttribute ()
     {
-
         return $this->categoryData();
-
     }
 
 
@@ -38,12 +44,12 @@ class Art extends Model
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
-    function paintingSize() {
+    function sizeData() {
          return $this->belongsTo(PaintingSize::class, 'size');
     }
 
     function categoryData() {
-        return $this->belongsTo(Category::class,'category','id');
+        return $this->belongsTo(Category::class,'category');
     }
 
     public function getImageAttribute($value)

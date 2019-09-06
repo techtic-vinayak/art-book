@@ -74,6 +74,7 @@ class ArtController extends Controller
                 }
             }
             $art->save();
+            $art = Art::find($request->id);
             return response()->json([
                 'status_code'   => 200,
                 'data'          => $art,
