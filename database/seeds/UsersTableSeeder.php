@@ -39,7 +39,7 @@ class UsersTableSeeder extends Seeder
       $users = factory(App\Models\User::class, 10)->create()->each(function($u){
         $u->roles()->sync(4);
       });
-      
+
       DB::statement('SET FOREIGN_KEY_CHECKS=1');
    }
 }

@@ -26,7 +26,7 @@ class ArtController extends Controller
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
         }
     }
-    
+
     /**
      * Add video with share
      */
@@ -79,7 +79,7 @@ class ArtController extends Controller
                 'data'          => $art,
                 'message'       => 'Art has been Updated successfully'
             ]);
-           
+
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
         }
@@ -91,7 +91,7 @@ class ArtController extends Controller
     {
         $user = \Auth::user();
         if ($user) {
-            $art = Art::find($id);
+            $art = Art::with('userInfo')->where('id',$id)->first();
             return response()->json([
                 'status_code'   => 200,
                 'data'          => $art,
@@ -121,7 +121,7 @@ class ArtController extends Controller
         $radius = !empty($request->input('radius')) ? $request->input('radius') :100;
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-        
+
         $user = \Auth::user();
         $user_data = $user->following();
         if(!empty($latitude) && !empty($longitude)){
@@ -170,7 +170,7 @@ class ArtController extends Controller
             'status_code'   => 200,
             'data'       => $art
         ]);
-      
+
     }
-    
+
 }

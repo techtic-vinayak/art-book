@@ -20,7 +20,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\LinkedSocialAccount;
-use DB; 
+use DB;
 
 
 /**
@@ -46,7 +46,7 @@ class UserController extends Controller
                     'message'       => 'Incorrect email address or password'], 400);
             }
             $user = \Auth::user();
-          
+
             return response()->json([
                 'status_code' => '200',
                 'data'        => $user,
@@ -134,29 +134,61 @@ class UserController extends Controller
     {
         $user = \Auth::user();
         if ($user) {
-            $fields = ['name', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' , 'about', 'cover_img'];
+            $fields = ['name', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' , 'about', 'cover_img', 'role_id'];
+           /*
+            $validatedData = $request->validate([
+                'name' => 'sometimes|required',
+                'phone' => 'sometimes|required',
+                'dob' => 'sometimes|required',
+            ]);*/
 
-        
+            $validated = [];
+
             foreach ($fields as $key => $field) {
+                switch ($field) {
+                        case 'dob':
+                        $validated[$field] = 'sometimes|required|nullable|before:today';
+                        break;
+                        case 'phone':
+                        $validated[$field] = 'sometimes|required|numeric|digits:10';
+                        break;
+                        case 'role_id':
+                        $validated[$field] = 'sometimes';
+                        break;
+
+                        default:
+                        $validated[$field] = 'sometimes|required';
+                        break;
+                }
+
+            }
+
+             $request->validate($validated);
+
+             foreach ($fields as $key => $field) {
                 if ($request->exists($field)) {
                     switch ($field) {
                         case 'dob':
                         $user->$field = date('Y-m-d', strtotime($request->dob));
                         break;
-       
+                        case 'role_id':
+                        $user->roles()->sync($request->role_id);
+                        break;
+
                         default:
                         $user->$field = $request->$field;
                         break;
                     }
                 }
             }
+
             $user->save();
             return response()->json([
                 'status_code'   => 200,
                 'data'          => $user,
                 'message'       => 'User has been Updated successfully'
             ]);
-         
+
         } else {
             return response()->json([
                 'status_code' => 401,
@@ -211,7 +243,7 @@ class UserController extends Controller
         }else{
             $userData = Socialite::driver($provider)->userFromToken($provider_id);
         }
-        
+
         $email=$userData->getEmail();
         $name=$userData->getName();
 
@@ -238,8 +270,8 @@ class UserController extends Controller
         $token = JWTAuth::fromUser($user);
         return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
     }
-    
-    
+
+
     /**
      * Reset Password
      */
@@ -273,7 +305,7 @@ class UserController extends Controller
         $latlng  = $request->only(['longitude', 'latitude']);
         $radius  = $request->get('radius', 100);
         $users = User::nearBy($latlng, $radius)->has('video')->get();
-        
+
         return response()->json([
             'status_code' => 200,
             'data'        => $users,
@@ -299,9 +331,9 @@ class UserController extends Controller
     }
 
     public function allUser(Request $request)
-    {   
+    {
         $user_id = \Auth::id();
-      
+
         $user = User::where('id','!=',$user_id)
                     ->whereNotIn('id', DB::table('user_status')
                                     ->select('block_user_id')
@@ -310,7 +342,7 @@ class UserController extends Controller
                                     ->toArray())
                     ->with('following','follower')
                     ->get();
-                   
+
 
         return response()->json([
             'status_code' => 200,
@@ -323,9 +355,9 @@ class UserController extends Controller
     {
        return Socialite::driver($social)->redirect();
     }
-        
+
     public function handleProviderCallback($social)
-    { 
+    {
        $userSocial = Socialite::driver($social)->stateless()->user();
        $user = User::where(['email' => $userSocial->getEmail()])->first();
        if($user){

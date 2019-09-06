@@ -1,5 +1,5 @@
 <?php return array (
-  'app' => 
+  'app' =>
   array (
     'name' => 'Laravel',
     'env' => 'local',
@@ -12,7 +12,7 @@
     'faker_locale' => 'en_US',
     'key' => 'base64:xz0nvXCI8IVRQvrAawc8XrLc2hekURHTWCn2E5tT8Tk=',
     'cipher' => 'AES-256-CBC',
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Illuminate\\Auth\\AuthServiceProvider',
       1 => 'Illuminate\\Broadcasting\\BroadcastServiceProvider',
@@ -43,7 +43,7 @@
       26 => 'App\\Providers\\RouteServiceProvider',
       27 => 'Mpociot\\ApiDoc\\ApiDocGeneratorServiceProvider',
     ),
-    'aliases' => 
+    'aliases' =>
     array (
       'App' => 'Illuminate\\Support\\Facades\\App',
       'Artisan' => 'Illuminate\\Support\\Facades\\Artisan',
@@ -80,53 +80,53 @@
       'View' => 'Illuminate\\Support\\Facades\\View',
     ),
   ),
-  'auth' => 
+  'auth' =>
   array (
-    'defaults' => 
+    'defaults' =>
     array (
       'guard' => 'web',
       'passwords' => 'users',
     ),
-    'guards' => 
+    'guards' =>
     array (
-      'web' => 
+      'web' =>
       array (
         'driver' => 'session',
         'provider' => 'users',
       ),
-      'api' => 
+      'api' =>
       array (
         'driver' => 'token',
         'provider' => 'users',
       ),
-      'backpack' => 
+      'backpack' =>
       array (
         'driver' => 'session',
         'provider' => 'backpack',
       ),
     ),
-    'providers' => 
+    'providers' =>
     array (
-      'users' => 
+      'users' =>
       array (
         'driver' => 'eloquent',
         'model' => 'App\\Models\\User',
       ),
-      'backpack' => 
+      'backpack' =>
       array (
         'driver' => 'eloquent',
         'model' => 'App\\Models\\BackpackUser',
       ),
     ),
-    'passwords' => 
+    'passwords' =>
     array (
-      'users' => 
+      'users' =>
       array (
         'provider' => 'users',
         'table' => 'password_resets',
         'expire' => 60,
       ),
-      'backpack' => 
+      'backpack' =>
       array (
         'provider' => 'backpack',
         'table' => 'password_resets',
@@ -134,9 +134,9 @@
       ),
     ),
   ),
-  'backpack' => 
+  'backpack' =>
   array (
-    'base' => 
+    'base' =>
     array (
       'project_name' => 'Backpack',
       'logo_lg' => '<b>Back</b>pack',
@@ -148,7 +148,7 @@
       'default_date_format' => 'j F Y',
       'default_datetime_format' => 'j F Y H:i',
       'meta_robots_content' => 'noindex, nofollow',
-      'overlays' => 
+      'overlays' =>
       array (
         0 => 'vendor/backpack/base/backpack.bold.css',
       ),
@@ -158,7 +158,7 @@
       'setup_dashboard_routes' => true,
       'setup_my_account_routes' => true,
       'user_model_fqn' => 'App\\Models\\BackpackUser',
-      'middleware_class' => 
+      'middleware_class' =>
       array (
         0 => 'App\\Http\\Middleware\\CheckIfAdmin',
         1 => 'Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull',
@@ -172,7 +172,7 @@
       'root_disk_name' => 'root',
       'license_code' => false,
     ),
-    'crud' => 
+    'crud' =>
     array (
       'default_save_action' => 'save_and_back',
       'show_save_action_change' => true,
@@ -185,9 +185,9 @@
       'responsive_table' => true,
       'persistent_table' => false,
       'default_page_length' => 25,
-      'page_length_menu' => 
+      'page_length_menu' =>
       array (
-        0 => 
+        0 =>
         array (
           0 => 10,
           1 => 25,
@@ -195,7 +195,7 @@
           3 => 100,
           4 => -1,
         ),
-        1 => 
+        1 =>
         array (
           0 => 10,
           1 => 25,
@@ -209,7 +209,7 @@
       'reorder_content_class' => 'col-md-8 col-md-offset-2',
       'show_translatable_field_icon' => true,
       'translatable_field_icon_position' => 'right',
-      'locales' => 
+      'locales' =>
       array (
         'en' => 'English',
         'fr' => 'French',
@@ -217,12 +217,12 @@
         'ro' => 'Romanian',
       ),
     ),
-    'pagemanager' => 
+    'pagemanager' =>
     array (
       'admin_controller_class' => 'Backpack\\PageManager\\app\\Http\\Controllers\\Admin\\PageCrudController',
       'page_model_class' => 'Backpack\\PageManager\\app\\Models\\Page',
     ),
-    'permissionmanager' => 
+    'permissionmanager' =>
     array (
       'allow_permission_create' => true,
       'allow_permission_update' => true,
@@ -232,77 +232,77 @@
       'allow_role_delete' => true,
     ),
   ),
-  'broadcasting' => 
+  'broadcasting' =>
   array (
     'default' => 'log',
-    'connections' => 
+    'connections' =>
     array (
-      'pusher' => 
+      'pusher' =>
       array (
         'driver' => 'pusher',
         'key' => '',
         'secret' => '',
         'app_id' => '',
-        'options' => 
+        'options' =>
         array (
           'cluster' => 'mt1',
           'encrypted' => true,
         ),
       ),
-      'redis' => 
+      'redis' =>
       array (
         'driver' => 'redis',
         'connection' => 'default',
       ),
-      'log' => 
+      'log' =>
       array (
         'driver' => 'log',
       ),
-      'null' => 
+      'null' =>
       array (
         'driver' => 'null',
       ),
     ),
   ),
-  'cache' => 
+  'cache' =>
   array (
     'default' => 'file',
-    'stores' => 
+    'stores' =>
     array (
-      'apc' => 
+      'apc' =>
       array (
         'driver' => 'apc',
       ),
-      'array' => 
+      'array' =>
       array (
         'driver' => 'array',
       ),
-      'database' => 
+      'database' =>
       array (
         'driver' => 'database',
         'table' => 'cache',
         'connection' => NULL,
       ),
-      'file' => 
+      'file' =>
       array (
         'driver' => 'file',
         'path' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/storage/framework/cache/data',
       ),
-      'memcached' => 
+      'memcached' =>
       array (
         'driver' => 'memcached',
         'persistent_id' => NULL,
-        'sasl' => 
+        'sasl' =>
         array (
           0 => NULL,
           1 => NULL,
         ),
-        'options' => 
+        'options' =>
         array (
         ),
-        'servers' => 
+        'servers' =>
         array (
-          0 => 
+          0 =>
           array (
             'host' => '127.0.0.1',
             'port' => 11211,
@@ -310,7 +310,7 @@
           ),
         ),
       ),
-      'redis' => 
+      'redis' =>
       array (
         'driver' => 'redis',
         'connection' => 'cache',
@@ -318,26 +318,26 @@
     ),
     'prefix' => 'laravel_cache',
   ),
-  'database' => 
+  'database' =>
   array (
     'default' => 'mysql',
-    'connections' => 
+    'connections' =>
     array (
-      'sqlite' => 
+      'sqlite' =>
       array (
         'driver' => 'sqlite',
         'database' => 'art_book',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
-      'mysql' => 
+      'mysql' =>
       array (
         'driver' => 'mysql',
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'art_book',
         'username' => 'root',
-        'password' => '',
+        'password' => 'root',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -346,7 +346,7 @@
         'strict' => true,
         'engine' => NULL,
       ),
-      'pgsql' => 
+      'pgsql' =>
       array (
         'driver' => 'pgsql',
         'host' => '127.0.0.1',
@@ -360,7 +360,7 @@
         'schema' => 'public',
         'sslmode' => 'prefer',
       ),
-      'sqlsrv' => 
+      'sqlsrv' =>
       array (
         'driver' => 'sqlsrv',
         'host' => '127.0.0.1',
@@ -374,17 +374,17 @@
       ),
     ),
     'migrations' => 'migrations',
-    'redis' => 
+    'redis' =>
     array (
       'client' => 'predis',
-      'default' => 
+      'default' =>
       array (
         'host' => '127.0.0.1',
         'password' => NULL,
         'port' => '6379',
         'database' => 0,
       ),
-      'cache' => 
+      'cache' =>
       array (
         'host' => '127.0.0.1',
         'password' => NULL,
@@ -393,19 +393,19 @@
       ),
     ),
   ),
-  'elfinder' => 
+  'elfinder' =>
   array (
-    'dir' => 
+    'dir' =>
     array (
       0 => 'uploads',
     ),
-    'disks' => 
+    'disks' =>
     array (
     ),
-    'route' => 
+    'route' =>
     array (
       'prefix' => 'admin/elfinder',
-      'middleware' => 
+      'middleware' =>
       array (
         0 => 'web',
         1 => 'admin',
@@ -413,39 +413,39 @@
     ),
     'access' => 'Barryvdh\\Elfinder\\Elfinder::checkAccess',
     'roots' => NULL,
-    'options' => 
+    'options' =>
     array (
     ),
-    'root_options' => 
+    'root_options' =>
     array (
     ),
   ),
-  'filesystems' => 
+  'filesystems' =>
   array (
     'default' => 'upload',
     'cloud' => 's3',
-    'disks' => 
+    'disks' =>
     array (
-      'local' => 
+      'local' =>
       array (
         'driver' => 'local',
         'root' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/storage/app',
       ),
-      'public' => 
+      'public' =>
       array (
         'driver' => 'local',
         'root' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/storage/app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
-      'upload' => 
+      'upload' =>
       array (
         'driver' => 'local',
         'root' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/public/uploads',
         'url' => 'http://localhost/uploads',
         'visibility' => 'public',
       ),
-      's3' => 
+      's3' =>
       array (
         'driver' => 's3',
         'key' => NULL,
@@ -454,31 +454,31 @@
         'bucket' => NULL,
         'url' => NULL,
       ),
-      'root' => 
+      'root' =>
       array (
         'driver' => 'local',
         'root' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book',
       ),
     ),
   ),
-  'hashing' => 
+  'hashing' =>
   array (
     'driver' => 'bcrypt',
-    'bcrypt' => 
+    'bcrypt' =>
     array (
       'rounds' => 10,
     ),
-    'argon' => 
+    'argon' =>
     array (
       'memory' => 1024,
       'threads' => 2,
       'time' => 2,
     ),
   ),
-  'jwt' => 
+  'jwt' =>
   array (
     'secret' => 'vruKoDPSir2VAtVvMHdSGRXQRSGYK8bVYCw7WdLqD4h4iH0u3Pxk5sIFcCCAWrAP',
-    'keys' => 
+    'keys' =>
     array (
       'public' => NULL,
       'private' => NULL,
@@ -487,7 +487,7 @@
     'ttl' => NULL,
     'refresh_ttl' => NULL,
     'algo' => 'HS256',
-    'required_claims' => 
+    'required_claims' =>
     array (
       0 => 'iss',
       1 => 'iat',
@@ -495,7 +495,7 @@
       3 => 'sub',
       4 => 'jti',
     ),
-    'persistent_claims' => 
+    'persistent_claims' =>
     array (
     ),
     'lock_subject' => true,
@@ -503,40 +503,40 @@
     'blacklist_enabled' => true,
     'blacklist_grace_period' => 0,
     'decrypt_cookies' => false,
-    'providers' => 
+    'providers' =>
     array (
       'jwt' => 'Tymon\\JWTAuth\\Providers\\JWT\\Lcobucci',
       'auth' => 'Tymon\\JWTAuth\\Providers\\Auth\\Illuminate',
       'storage' => 'Tymon\\JWTAuth\\Providers\\Storage\\Illuminate',
     ),
   ),
-  'logging' => 
+  'logging' =>
   array (
     'default' => 'stack',
-    'channels' => 
+    'channels' =>
     array (
-      'stack' => 
+      'stack' =>
       array (
         'driver' => 'stack',
-        'channels' => 
+        'channels' =>
         array (
           0 => 'daily',
         ),
       ),
-      'single' => 
+      'single' =>
       array (
         'driver' => 'single',
         'path' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/storage/logs/laravel.log',
         'level' => 'debug',
       ),
-      'daily' => 
+      'daily' =>
       array (
         'driver' => 'daily',
         'path' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/storage/logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
-      'slack' => 
+      'slack' =>
       array (
         'driver' => 'slack',
         'url' => NULL,
@@ -544,44 +544,44 @@
         'emoji' => ':boom:',
         'level' => 'critical',
       ),
-      'papertrail' => 
+      'papertrail' =>
       array (
         'driver' => 'monolog',
         'level' => 'debug',
         'handler' => 'Monolog\\Handler\\SyslogUdpHandler',
-        'handler_with' => 
+        'handler_with' =>
         array (
           'host' => NULL,
           'port' => NULL,
         ),
       ),
-      'stderr' => 
+      'stderr' =>
       array (
         'driver' => 'monolog',
         'handler' => 'Monolog\\Handler\\StreamHandler',
-        'with' => 
+        'with' =>
         array (
           'stream' => 'php://stderr',
         ),
       ),
-      'syslog' => 
+      'syslog' =>
       array (
         'driver' => 'syslog',
         'level' => 'debug',
       ),
-      'errorlog' => 
+      'errorlog' =>
       array (
         'driver' => 'errorlog',
         'level' => 'debug',
       ),
     ),
   ),
-  'mail' => 
+  'mail' =>
   array (
     'driver' => 'smtp',
     'host' => 'smtp.gmail.com',
     'port' => '587',
-    'from' => 
+    'from' =>
     array (
       'address' => 'hello@example.com',
       'name' => 'Example',
@@ -590,24 +590,24 @@
     'username' => 'techtic.mihir@gmail.com',
     'password' => 'tech@mihir007',
     'sendmail' => '/usr/sbin/sendmail -bs',
-    'markdown' => 
+    'markdown' =>
     array (
       'theme' => 'default',
-      'paths' => 
+      'paths' =>
       array (
         0 => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/resources/views/vendor/mail',
       ),
     ),
     'log_channel' => NULL,
   ),
-  'permission' => 
+  'permission' =>
   array (
-    'models' => 
+    'models' =>
     array (
       'permission' => 'Backpack\\PermissionManager\\app\\Models\\Permission',
       'role' => 'Backpack\\PermissionManager\\app\\Models\\Role',
     ),
-    'table_names' => 
+    'table_names' =>
     array (
       'users' => 'users',
       'roles' => 'roles',
@@ -618,13 +618,13 @@
     ),
     'cache_expiration_time' => 1440,
     'display_permission_in_exception' => false,
-    'column_names' => 
+    'column_names' =>
     array (
       'model_morph_key' => 'model_id',
     ),
-    'cache' => 
+    'cache' =>
     array (
-      'expiration_time' => 
+      'expiration_time' =>
       DateInterval::__set_state(array(
          'y' => 0,
          'm' => 0,
@@ -648,11 +648,11 @@
       'store' => 'default',
     ),
   ),
-  'prologue' => 
+  'prologue' =>
   array (
-    'alerts' => 
+    'alerts' =>
     array (
-      'levels' => 
+      'levels' =>
       array (
         0 => 'info',
         1 => 'warning',
@@ -662,30 +662,30 @@
       'session_key' => 'alert_messages',
     ),
   ),
-  'queue' => 
+  'queue' =>
   array (
     'default' => 'sync',
-    'connections' => 
+    'connections' =>
     array (
-      'sync' => 
+      'sync' =>
       array (
         'driver' => 'sync',
       ),
-      'database' => 
+      'database' =>
       array (
         'driver' => 'database',
         'table' => 'jobs',
         'queue' => 'default',
         'retry_after' => 90,
       ),
-      'beanstalkd' => 
+      'beanstalkd' =>
       array (
         'driver' => 'beanstalkd',
         'host' => 'localhost',
         'queue' => 'default',
         'retry_after' => 90,
       ),
-      'sqs' => 
+      'sqs' =>
       array (
         'driver' => 'sqs',
         'key' => 'your-public-key',
@@ -694,7 +694,7 @@
         'queue' => 'your-queue-name',
         'region' => 'us-east-1',
       ),
-      'redis' => 
+      'redis' =>
       array (
         'driver' => 'redis',
         'connection' => 'default',
@@ -703,71 +703,71 @@
         'block_for' => NULL,
       ),
     ),
-    'failed' => 
+    'failed' =>
     array (
       'database' => 'mysql',
       'table' => 'failed_jobs',
     ),
   ),
-  'services' => 
+  'services' =>
   array (
-    'mailgun' => 
+    'mailgun' =>
     array (
       'domain' => NULL,
       'secret' => NULL,
       'endpoint' => 'api.mailgun.net',
     ),
-    'ses' => 
+    'ses' =>
     array (
       'key' => NULL,
       'secret' => NULL,
       'region' => 'us-east-1',
     ),
-    'sparkpost' => 
+    'sparkpost' =>
     array (
       'secret' => NULL,
     ),
-    'stripe' => 
+    'stripe' =>
     array (
       'model' => 'App\\User',
       'key' => NULL,
       'secret' => NULL,
-      'webhook' => 
+      'webhook' =>
       array (
         'secret' => NULL,
         'tolerance' => 300,
       ),
     ),
-    'fcm' => 
+    'fcm' =>
     array (
       'key' => '',
     ),
-    'facebook' => 
+    'facebook' =>
     array (
       'client_id' => '754506008316559',
       'client_secret' => '937c341fc625c6ee5a5fededda735a97',
       'redirect' => 'http://localhostapi/login/facebook/callback',
     ),
-    'instagram' => 
+    'instagram' =>
     array (
       'client_id' => 'b81e845e4e9b412abf032556738cfd8e',
       'client_secret' => '6258ab1f30534c8ba2aa1559bd212591',
       'redirect' => 'http://localhost/login/instagram/callback',
     ),
-    'snapchat' => 
+    'snapchat' =>
     array (
       'client_id' => 'e9e5ac05-03eb-4265-b944-b5d1b25e2eed',
       'client_secret' => 'aL5komQ--OY8iMF2W5AlS_tW42FttnO1Xbd3NyNarjI',
       'redirect' => 'http://localhostapi/login/snapchat/callback',
     ),
-    'twitter' => 
+    'twitter' =>
     array (
       'client_id' => 'YH8oY75JhFGso0iW2D4C07dXS',
       'client_secret' => 'PIOdmNVbZMsUwnWhSDbmJtDDOdWxW0DWf72jpV00LQDZfxtoDJ',
       'redirect' => 'http://localhost/api/login/twitter/callback',
     ),
   ),
-  'session' => 
+  'session' =>
   array (
     'driver' => 'file',
     'lifetime' => '120',
@@ -777,7 +777,7 @@
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
-    'lottery' => 
+    'lottery' =>
     array (
       0 => 2,
       1 => 100,
@@ -789,17 +789,17 @@
     'http_only' => true,
     'same_site' => NULL,
   ),
-  'view' => 
+  'view' =>
   array (
-    'paths' => 
+    'paths' =>
     array (
       0 => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/resources/views',
     ),
     'compiled' => '/media/anil/1a126b69-1e55-4b4e-8d0e-7f0e80056fb6/anil/art-book/storage/framework/views',
   ),
-  'gravatar' => 
+  'gravatar' =>
   array (
-    'default' => 
+    'default' =>
     array (
       'size' => 80,
       'fallback' => 'mm',
@@ -809,20 +809,20 @@
       'forceExtension' => 'jpg',
     ),
   ),
-  'debug-server' => 
+  'debug-server' =>
   array (
     'host' => 'tcp://127.0.0.1:9912',
   ),
-  'image' => 
+  'image' =>
   array (
     'driver' => 'gd',
   ),
-  'passport' => 
+  'passport' =>
   array (
     'private_key' => NULL,
     'public_key' => NULL,
   ),
-  'sluggable' => 
+  'sluggable' =>
   array (
     'source' => NULL,
     'maxLength' => NULL,
@@ -835,17 +835,17 @@
     'reserved' => NULL,
     'onUpdate' => false,
   ),
-  'trustedproxy' => 
+  'trustedproxy' =>
   array (
     'proxies' => NULL,
     'headers' => 30,
   ),
-  'tinker' => 
+  'tinker' =>
   array (
-    'commands' => 
+    'commands' =>
     array (
     ),
-    'dont_alias' => 
+    'dont_alias' =>
     array (
       0 => 'App\\Nova',
     ),
