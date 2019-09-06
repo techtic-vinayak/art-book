@@ -330,11 +330,13 @@ class UserController extends Controller
                 ], 200);
     }
 
-    public function allUser(Request $request)
+    public function allUser(NearByUserRequest $request)
     {
         $user_id = \Auth::id();
+        $latlng  = $request->only(['longitude', 'latitude']);
+        $radius  = $request->get('radius', 100);
 
-        $user = User::where('id','!=',$user_id)
+        $user = User::nearBy($latlng, $radius)->where('id','!=',$user_id)
                     ->whereNotIn('id', DB::table('user_status')
                                     ->select('block_user_id')
                                     ->where('user_id',$user_id)

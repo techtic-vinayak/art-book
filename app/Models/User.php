@@ -25,11 +25,11 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $guarded = ['id'];
-    
+
     protected $hidden = [
         'password', 'remember_token', 'email_verified_at',
     ];
- 
+
     protected $appends = [ 'user_role' ];
 
     public function routeNotificationForFcm($notification)
@@ -51,7 +51,7 @@ class User extends Authenticatable implements JWTSubject
             $query->whereNotNull('longitude');
         }
     }
-    
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -76,7 +76,7 @@ class User extends Authenticatable implements JWTSubject
     {
         $this->saveFile($value, 'profile_pic', "user/" . date('Y/m'));
     }
-    
+
     public function getProfilePicAttribute($value)
     {
         if (!empty($value)) {
@@ -88,7 +88,7 @@ class User extends Authenticatable implements JWTSubject
     {
         $this->saveFile($value, 'cover_img', "user/" . date('Y/m'));
     }
-    
+
     public function getCoverImgAttribute($value)
     {
         if (!empty($value)) {

@@ -32,7 +32,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('get-profile', 'UserController@getProfile');
     Route::post('change-password', 'UserController@changePassword');
     Route::get('user', 'UserController@getAuthenticatedUser');
-    Route::get('users', 'UserController@allUser');
+    Route::post('users', 'UserController@allUser');
 
 
     Route::get('arts', 'ArtController@index');
@@ -52,5 +52,5 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::get('categories', 'CategoryController@index');
     Route::get('painting-sizes', 'PaintingSizeController@index');
-    
+
 });
