@@ -40,6 +40,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('edit-art', 'ArtController@editArt');
     Route::get('art/{id}', 'ArtController@detailArt');
     Route::delete('art/{id}', 'ArtController@deleteArt');
+    Route::get('following-art', 'ArtController@followingUserArt');
 
     Route::post('send', 'ContactController@sendRequest');
     Route::post('respond', 'ContactController@acknowledgeRequest');

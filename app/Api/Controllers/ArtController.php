@@ -5,6 +5,8 @@ use App\Models\Art;
 use App\Api\Requests\EditArtRequest;
 use App\Api\Requests\AddArtRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
 
 /**
  * @resource Contact
@@ -13,8 +15,7 @@ class ArtController extends Controller
 {
     public function index()
     {
-         $user          = \Auth::user();
-        
+        $user          = \Auth::user();
         if ($user) {
             $art = Art::where('user_id',$user->id)->orderBy('id','DESC')->get();
             return response()->json([
@@ -24,7 +25,6 @@ class ArtController extends Controller
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
         }
-
     }
     
     /**
@@ -114,6 +114,64 @@ class ArtController extends Controller
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 401);
         }
+    }
+
+    public function followingUserArt(Request $request)
+    {
+        $radius = !empty($request->input('radius')) ? $request->input('radius') :100;
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        
+        $user = \Auth::user();
+        $user_data = $user->following();
+        if(!empty($latitude) && !empty($longitude)){
+            $user_data = $user_data->whereHas('followingUser', function ($query) use ($latitude,$longitude,$radius)
+                {
+                    $distance = "(
+                        3959 * acos (
+                          cos ( radians(".$latitude.") )
+                          * cos( radians( latitude ) )
+                          * cos( radians( longitude ) - radians(".$longitude.") )
+                          + sin ( radians(".$latitude.") )
+                          * sin( radians( latitude ) )
+                        )
+                      )";
+                    $query->whereRaw($distance . "<= " . $radius);
+                    $query->whereNotNull('latitude');
+                    $query->whereNotNull('longitude');
+                });
+        }
+
+        $user_data = $user_data->pluck('receiver_id')->toArray();
+
+        $art = Art::whereIn('user_id', $user_data);
+        $fields = ['title', 'art_gallery', 'size', 'category'];
+        foreach ($fields as $field) {
+            if ($request->exists($field)) {
+                switch ($field) {
+                    case 'size':
+                    $art = $art->where('size', '=', $request->get($field));
+                    break;
+
+                    case 'category':
+                    $art = $art->where('category', '=', $request->get($field));
+                    break;
+
+                    default:
+                    $art = $art->where($field , 'LIKE',  '%' .$request->get($field). '%');
+                    break;
+                }
+            }
+        }
+
+       
+        $art = $art->orderBy('id','DESC')->get();
+
+        return response()->json([
+            'status_code'   => 200,
+            'data'       => $art
+        ]);
+      
     }
     
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
+use App\Models\Art;
 
 class Connection extends Model
 {
@@ -18,10 +19,10 @@ class Connection extends Model
     	return $this->belongsTo(User::class,'receiver_id');
     }
 
+    
     public function followerUser()
     {
     	return $this->belongsTo(User::class,'sender_id');
     }
-
 
 }
