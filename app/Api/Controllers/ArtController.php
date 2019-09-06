@@ -164,7 +164,6 @@ class ArtController extends Controller
             }
         }
 
-       
         $art = $art->orderBy('id','DESC')->get();
 
         return response()->json([

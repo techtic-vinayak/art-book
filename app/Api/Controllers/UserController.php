@@ -221,7 +221,7 @@ class UserController extends Controller
         if ($linkedSocialAccount) {
             $user = $linkedSocialAccount->user;
         } else {
-            $user = User::where('email', $email)->first();
+            $user = User::where('email', $email)->whereNotNull('email')->first();
             if (!$user) {
                 $user = User::create([
                     'name' => $name,
