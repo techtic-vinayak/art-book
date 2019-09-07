@@ -54,6 +54,7 @@ class ArtController extends Controller
                 $details = [
                     'user_id' => $user_data->receiver_id,
                     'sender_id' => $user->id,
+                    'title' => 'Added Art',
                     'msg' => $user->name .' added '.$request->get('title').'  art.',
                 ];
                 $user_data->followingUser->notify(new ArtNotification($details));

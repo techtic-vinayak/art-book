@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Benwilkins\FCM\FcmMessage;
 
 class ArtNotification extends Notification
 {
@@ -30,7 +31,7 @@ class ArtNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'fcm'];
     }
 
     /**
@@ -45,6 +46,21 @@ class ArtNotification extends Notification
                     ->line('The introduction to the notification.')
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
+    }
+
+    public function toFcm($notifiable)
+    {
+        $data = $this->my_notification;
+        $title = $data['title'];
+        $body = $data['msg'];
+
+        $message = new FcmMessage();
+        $message->content([
+            'title'        => $title,
+            'body'         => $body
+        ]);
+        
+        return $message;
     }
 
     /**

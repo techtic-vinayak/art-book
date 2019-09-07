@@ -9,6 +9,7 @@ use App\Api\Requests\SendRequest;
 use App\Api\Requests\AcknowledgeRequest;
 use App\Api\Requests\PenddingRequest;
 use App\Notifications\ArtNotification;
+use App\Models\User;
 
 /**
  * @resource Contact
@@ -32,13 +33,16 @@ class ContactController extends Controller
                 'receiver_id' => $request->get('receiver_id'),
                 'status' => 'pendding'
             ]);
+            $userNotification =User::find($request->get('receiver_id'));
 
             $details = [
-                        'user_id' => $request->get('receiver_id'),
+                        'user_id' => $userNotification->id,
                         'sender_id' => $user_id,
+                        'title' => 'Sent Request',
                         'msg' => $user->name .' sent you request.',
                     ];
-            $user->notify(new ArtNotification($details));
+            
+            $userNotification->notify(new ArtNotification($details));
 
             return response()->json([
                 'status_code' => 200,
@@ -72,9 +76,11 @@ class ContactController extends Controller
                     $details = [
                         'user_id' => $connection->sender_id,
                         'sender_id' => $user_id,
+                        'title' => 'Accept Request',
                         'msg' => $user->name .' accepted your request.',
                     ];
-                    $user->notify(new ArtNotification($details));
+                    $userNotification =User::find($connection->sender_id);
+                    $userNotification->notify(new ArtNotification($details));
             
                 }
                 return response()->json([

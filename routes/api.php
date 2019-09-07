@@ -34,7 +34,6 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('user', 'UserController@getAuthenticatedUser');
     Route::get('users', 'UserController@allUser');
 
-
     Route::get('arts', 'ArtController@index');
     Route::post('add-art', 'ArtController@addArt');
     Route::post('edit-art', 'ArtController@editArt');
@@ -51,6 +50,9 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('unblock/{id}', 'UserStatusController@unblockUser');
 
     Route::get('categories', 'CategoryController@index');
+
     Route::get('painting-sizes', 'PaintingSizeController@index');
+    
+    Route::get('notifications', 'NotificationController@index');
 
 });

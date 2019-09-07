@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\Connection;
+use App\Models\Notification;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -34,7 +35,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function routeNotificationForFcm($notification)
     {
-        return $this->token;
+        return $this->device_token;
     }
 
     public function scopeNearBy($query, $latlng, $radius = 100)
@@ -123,5 +124,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(User::class, 'user_status', 'user_id', 'block_user_id');
 
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->hasMany(Notification::class,'notifiable_id');
     }
 }
