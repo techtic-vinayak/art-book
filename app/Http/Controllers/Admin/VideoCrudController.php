@@ -67,13 +67,14 @@ class VideoCrudController extends CrudController
                 'name'  => 'Video Reply',
                 'label' => 'Video Reply',
                 'type'  => 'relation_count',
-                'entity'    => 'replies',
+                'entity'
+                => 'replies',
 
             ], [
-                'name'  => 'Video Report',
-                'label' => 'Video Report',
-                'type'  => 'relation_count',
-                'entity'    => 'reports',
+                'name'   => 'Video Report',
+                'label'  => 'Video Report',
+                'type'   => 'relation_count',
+                'entity' => 'reports',
 
             ],
         ]);
