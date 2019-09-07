@@ -103,11 +103,13 @@ class ContactController extends Controller
         $flag =$request->get('flag');
         if ($flag == 'sent'){
             $connection = Connection::where('sender_id' , $user_id)
+                        ->with('followingUser')
                         ->where('status','pendding')
                         ->get();
 
         }else if ($flag == 'recevied'){
             $connection = Connection::where('receiver_id' , $user_id)
+                        ->with('followerUser')
                         ->where('status','pendding')
                         ->get();
         }
