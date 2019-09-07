@@ -64,10 +64,11 @@ class ArtNotification extends Notification
     {
 
         $data = $this->my_notification;
+        
         return [
-            'user_id' => $data->user_id,
-            'sender_id' => $data->sender_id,
-            'msg' => $data->msg,
+            'user_id' => $data['user_id'],
+            'sender_id' => $data['sender_id'],
+            'msg' => $data['msg'],
         ];
     }
 }

@@ -34,6 +34,7 @@ class ArtController extends Controller
     public function addArt(AddArtRequest $request)
     {
         $user          = \Auth::user();
+
         if ($user) {
             $data = array(
                 'user_id'                    => $user->id,
@@ -48,6 +49,15 @@ class ArtController extends Controller
             );
             $art = Art::create($data);
 
+            $users = $user->following()->with('followingUser')->get();
+            foreach ($users as $user_data) {
+                $details = [
+                    'user_id' => $user_data->receiver_id,
+                    'sender_id' => $user->id,
+                    'msg' => $user->name .' added '.$request->get('title').'  art.',
+                ];
+                $user_data->followingUser->notify(new ArtNotification($details));
+            }
             return response()->json([
                     'status_code' => 200,
                     'data'        => $art,

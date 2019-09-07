@@ -8,6 +8,7 @@ use App\Models\Connection;
 use App\Api\Requests\SendRequest;
 use App\Api\Requests\AcknowledgeRequest;
 use App\Api\Requests\PenddingRequest;
+use App\Notifications\ArtNotification;
 
 /**
  * @resource Contact
@@ -20,6 +21,7 @@ class ContactController extends Controller
     public function sendRequest(SendRequest $request)
     {
         $user_id = \Auth::id();
+        $user = \Auth::user();
         $connected = Connection::where('sender_id' , $user_id)
                         ->where('receiver_id', $request->get('receiver_id'))
                         ->count();
@@ -30,6 +32,14 @@ class ContactController extends Controller
                 'receiver_id' => $request->get('receiver_id'),
                 'status' => 'pendding'
             ]);
+
+            $details = [
+                        'user_id' => $request->get('receiver_id'),
+                        'sender_id' => $user_id,
+                        'msg' => $user->name .' sent you request.',
+                    ];
+            $user->notify(new ArtNotification($details));
+
             return response()->json([
                 'status_code' => 200,
                 'data'        => $connection,
@@ -46,15 +56,27 @@ class ContactController extends Controller
     public function acknowledgeRequest(AcknowledgeRequest $request)
     {
         $user_id = \Auth::id();
+        $user = \Auth::user();
 
         $connection = Connection::where('receiver_id' , $user_id)
                         ->where('status','pendding')
                         ->find($request->get('request_id'));
-        
+
         if( !empty($connection) ){
             if( ($request->get('status') == 'accepted') || ($request->get('status') == 'rejected') ){
                 $connection->status = $request->get('status');
                 $connection->save();
+                $connection = Connection::with('followerUser')->find($request->get('request_id'));
+                if ( $request->get('status') == 'accepted' ) {
+
+                    $details = [
+                        'user_id' => $connection->sender_id,
+                        'sender_id' => $user_id,
+                        'msg' => $user->name .' accepted your request.',
+                    ];
+                    $user->notify(new ArtNotification($details));
+            
+                }
                 return response()->json([
                     'status_code' => 200,
                     'data'        => $connection,
