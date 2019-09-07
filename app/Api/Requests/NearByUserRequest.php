@@ -7,8 +7,8 @@ class NearByUserRequest extends Request
     public function rules()
     {
         return [
-            'latitude'  => 'required|string',
-            'longitude' => 'required|string',
+            'latitude'  => 'sometimes|required|string',
+            'longitude' => 'sometimes|required|string',
         ];
     }
 }

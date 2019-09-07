@@ -7,6 +7,7 @@ use App\Api\Requests\AddArtRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Notifications\ArtNotification;
 
 /**
  * @resource Contact
@@ -46,6 +47,7 @@ class ArtController extends Controller
                 'about'                      => $request->get('about'),
             );
             $art = Art::create($data);
+
             return response()->json([
                     'status_code' => 200,
                     'data'        => $art,
