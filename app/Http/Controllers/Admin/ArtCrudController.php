@@ -83,6 +83,8 @@ class ArtCrudController extends CrudController
                                 'type'  => 'image'
                             ]);
 
+        // remove an array of columns from the stack
+        $this->crud->removeColumns(['about', 'subject']);
         // add asterisk for fields that are required in ArtRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'edit');
@@ -90,8 +92,7 @@ class ArtCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
-        //dd(Auth::check());
-        $request['user_id']  = 1;
+        //$request['user_id']  = 1;
         // your additional operations before save here
         $redirect_location   = parent::storeCrud($request);
         // your additional operations after save here
