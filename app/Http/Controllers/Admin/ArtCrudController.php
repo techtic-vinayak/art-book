@@ -83,8 +83,35 @@ class ArtCrudController extends CrudController
                                 'type'  => 'image'
                             ]);
 
+        $this->crud->addColumns([
+                [
+                    'name'      => 'user_id',
+                    'label'     => "User",
+                    'type'      => 'select',
+                    'entity'    => 'userInfo',
+                    'attribute' => 'name',
+                ],  [
+                    'name'      => 'category',
+                    'label'     => "Category",
+                    'type'      => 'select',
+                    'entity'    => 'categoryData',
+                    'attribute' => 'name',
+                ],  [
+                    'name'      => 'size',
+                    'label'     => "Painting Size",
+                    'type'      => 'select',
+                    'entity'    => 'sizeData',
+                    'attribute' => 'size',
+                ], [
+                    'name'   => 'image',
+                    'label'  => "Image",
+                    'type'   => 'image',
+                    'height' => '70px',
+                    'width'  => '70px',
+                ],
+        ]);
         // remove an array of columns from the stack
-        $this->crud->removeColumns(['about', 'subject']);
+        $this->crud->removeColumns(['about', 'subject', 'material', 'art_gallery']);
         // add asterisk for fields that are required in ArtRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'edit');
