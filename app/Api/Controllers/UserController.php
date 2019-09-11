@@ -245,7 +245,7 @@ class UserController extends Controller
         }
 
 
-        dd($userData);
+        dd($userData->getid());
 
         $email=$userData->getEmail();
         $name=$userData->getName();
