@@ -10,6 +10,7 @@ use App\Scopes\EventScope;
 class Art extends Model
 {
     use FileUploadTrait;
+    use CrudTrait;
 
     protected $table   = "art";
     protected $guarded = ['id'];

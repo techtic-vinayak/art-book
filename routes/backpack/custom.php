@@ -14,4 +14,7 @@ Route::group([
     // custom admin routes
     CRUD::resource('videoreport', 'VideoReportCrudController');
     CRUD::resource('video', 'VideoCrudController');
+    CRUD::resource('paintingsize', 'PaintingSizeCrudController');
+    CRUD::resource('category', 'CategoryCrudController');
+    CRUD::resource('art', 'ArtCrudController');
 }); // this should be the absolute last line of this file
