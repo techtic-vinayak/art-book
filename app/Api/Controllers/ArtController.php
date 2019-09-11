@@ -21,17 +21,14 @@ class ArtController extends Controller
         if( isset($other_user_id) && !empty($other_user_id) )
         {
             $user_id = $other_user_id;
-
         }
-        if ($user) {
-            $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
-            return response()->json([
-                    'status_code' => 200,
-                    'data'        => $art,
-            ]);
-        } else {
-            return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
-        }
+      
+        $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
+        return response()->json([
+                'status_code' => 200,
+                'data'        => $art,
+        ]);
+       
     }
 
     /**
