@@ -244,6 +244,9 @@ class UserController extends Controller
             $userData = Socialite::driver($provider)->userFromToken($provider_id);
         }
 
+
+        dd($userData);
+
         $email=$userData->getEmail();
         $name=$userData->getName();
 
