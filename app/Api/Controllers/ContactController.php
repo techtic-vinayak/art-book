@@ -94,6 +94,7 @@ class ContactController extends Controller
             }
         } else if ($request->get('status') == 'cancel') {
             $Connection = Connection::find($request->get('request_id'));
+            dd($connection);
             if (!empty($connection)) {
                 $connection->forceDelete();
                 return response()->json([
