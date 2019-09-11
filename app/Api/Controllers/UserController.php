@@ -245,13 +245,12 @@ class UserController extends Controller
         }
 
 
-        dd($userData->getId());
-
+        $social_id = $userData->getId();
         $email=$userData->getEmail();
         $name=$userData->getName();
 
         $linkedSocialAccount =LinkedSocialAccount::where('provider_name', $provider)
-            ->where('provider_id', $provider_id)->first();
+            ->where('provider_id', $social_id)->first();
 
         if ($linkedSocialAccount) {
             $user = $linkedSocialAccount->user;
@@ -265,7 +264,7 @@ class UserController extends Controller
                 $user = User::find($user->id);
             }
             $user->linkedSocialAccounts()->create([
-                'provider_id' => $provider_id,
+                'provider_id' => $social_id,
                 'provider_name' => $provider,
             ]);
         }
