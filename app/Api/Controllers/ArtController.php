@@ -14,11 +14,17 @@ use App\Notifications\ArtNotification;
  */
 class ArtController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $user          = \Auth::user();
+        $user_id         = \Auth::id();
+        $other_user_id = $request->input('other_user_id');
+        if( isset($other_user_id) && !empty($other_user_id) )
+        {
+            $user_id = $other_user_id;
+
+        }
         if ($user) {
-            $art = Art::where('user_id',$user->id)->orderBy('id','DESC')->get();
+            $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
             return response()->json([
                     'status_code' => 200,
                     'data'        => $art,
