@@ -119,6 +119,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Connection::class,'receiver_id');
     }
 
+    public function connections()
+    {
+        return $this->hasMany(Connection::class,'receiver_id')->where('sender_id', \Auth::user()->id);
+    }
+
     public function art()
     {
         return $this->hasMany(Art::class);

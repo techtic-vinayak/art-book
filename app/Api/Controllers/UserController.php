@@ -353,7 +353,7 @@ class UserController extends Controller
                                     ->where('user_id',$user_id)
                                     ->get()
                                     ->toArray())
-                    ->with('following','follower','connection_status')
+                    ->with('following','follower','connections')
                     ->get();
 
 
