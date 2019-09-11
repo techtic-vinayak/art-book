@@ -26,34 +26,56 @@ class ContactController extends Controller
         $connected = Connection::where('sender_id' , $user_id)
                         ->where('receiver_id', $request->get('receiver_id'))
                         ->count();
+        $flag = $request->get('flag');
 
-        if($connected == 0){
-            $connection = Connection::create([ 
-                'sender_id' => $user_id,
-                'receiver_id' => $request->get('receiver_id'),
-                'status' => 'pendding'
-            ]);
-            $userNotification =User::find($request->get('receiver_id'));
+        if ($flag == 'follow') {
+            if($connected == 0){
+                $connection = Connection::create([ 
+                    'sender_id' => $user_id,
+                    'receiver_id' => $request->get('receiver_id'),
+                    'status' => 'pendding'
+                ]);
+                $userNotification =User::find($request->get('receiver_id'));
 
-            $details = [
-                        'user_id' => $userNotification->id,
-                        'sender_id' => $user_id,
-                        'title' => 'Sent Request',
-                        'msg' => $user->name .' sent you request.',
-                    ];
+                $details = [
+                            'user_id' => $userNotification->id,
+                            'sender_id' => $user_id,
+                            'title' => 'Sent Request',
+                            'msg' => $user->name .' sent you request.',
+                        ];
+                
+                $userNotification->notify(new ArtNotification($details));
+
+                return response()->json([
+                    'status_code' => 200,
+                    'data'        => $connection,
+                    'message'     => 'Request send successfully.'
+                ], 200);
+            }else{
+                return response()->json([
+                    'status_code' => 400,
+                     'message'     => 'Already sent Request.'
+                ], 400);
+            }
+        }
+        elseif ($flag == 'unfollow') {
             
-            $userNotification->notify(new ArtNotification($details));
+            $connected = Connection::where('sender_id' , $user_id)
+                            ->where('status', 'accepted')
+                            ->where('receiver_id', $request->get('receiver_id'))->first();
 
-            return response()->json([
-                'status_code' => 200,
-                'data'        => $connection,
-                'message'     => 'Request send successfully.'
-            ], 200);
-        }else{
-            return response()->json([
-                'status_code' => 400,
-                 'message'     => 'Already sent Request.'
-            ], 400);
+            if (!empty($connected)) {
+                $connected->forceDelete();
+                return response()->json([
+                    'status_code' => 200,
+                     'message'     => 'unfollow successfully.'
+                ], 200);
+            }else{
+                return response()->json([
+                    'status_code' => 400,
+                     'message'     => 'no request found'
+                ], 400);
+            }                       
         }
     }
 
