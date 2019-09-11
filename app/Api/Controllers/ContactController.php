@@ -62,12 +62,11 @@ class ContactController extends Controller
         $user_id = \Auth::id();
         $user = \Auth::user();
 
-        $connection = Connection::where('receiver_id' , $user_id)
-                        ->where('status','pendding')
-                        ->find($request->get('request_id'));
-
-        if( !empty($connection) ){
-            if( ($request->get('status') == 'accepted') || ($request->get('status') == 'rejected') ){
+        if( ($request->get('status') == 'accepted') || ($request->get('status') == 'rejected') ){
+            $connection = Connection::where('receiver_id' , $user_id)
+                    ->where('status','pendding')
+                    ->find($request->get('request_id'));
+            if (!empty($connection)) {
                 $connection->status = $request->get('status');
                 $connection->save();
                 $connection = Connection::with('followerUser')->find($request->get('request_id'));
@@ -86,20 +85,27 @@ class ContactController extends Controller
                 return response()->json([
                     'status_code' => 200,
                     'data'        => $connection,
-                ], 200);
-
-            } else if ($request->get('status') == 'cancel') {
-                $connection->forceDelete();
+                ]);
+            } else {
                 return response()->json([
                     'status_code' => 400,
-                    'message'        => 'Request cancel successfully',
+                     'message'     => 'Not found pendding request.'
                 ], 400);
             }
-        }else{
-            return response()->json([
-                'status_code' => 400,
-                 'message'     => 'Not found pendding request.'
-            ], 400);
+        } else if ($request->get('status') == 'cancel') {
+            $Connection = Connection::find($request->get('request_id'));
+            if (!empty($connection)) {
+                $connection->forceDelete();
+                return response()->json([
+                    'status_code' => 200,
+                    'message'     => 'Request cancel successfully',
+                ]);
+            }else{
+                return response()->json([
+                    'status_code' => 400,
+                     'message'     => 'Not found request.'
+                ], 400);
+            }
         }
     }
 
