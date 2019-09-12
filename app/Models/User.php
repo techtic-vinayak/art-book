@@ -116,7 +116,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function connection_status()
     {
-        return $this->hasMany(Connection::class,'receiver_id');
+        return $this->hasOne(Connection::class,'receiver_id');
     }
 
     public function connections()

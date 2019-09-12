@@ -326,6 +326,8 @@ class UserController extends Controller
 
         $user = User::with('connection_status', 'following.followingUser','follower.followerUser')->find($user_id);
 
+        $user['connections'] = $user['connection_status'];
+        unset($user['connection_status']);
         
         $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
                         ->where('status','pendding')
@@ -353,7 +355,7 @@ class UserController extends Controller
                                     ->where('user_id',$user_id)
                                     ->get()
                                     ->toArray())
-                    ->with('following','follower','connections')
+                    ->with('following.followingUser','follower.followerUser','connections')
                     ->get();
 
 
