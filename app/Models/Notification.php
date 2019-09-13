@@ -9,7 +9,7 @@ class Notification extends Model
   
     protected $table   = "notifications";
     protected $guarded = ['id'];
-    protected $hidden = ['id','type','notifiable_type','notifiable_id'];
+    protected $hidden = ['type','notifiable_type','notifiable_id'];
     protected $casts  = ['data'=> 'array'];
 
 }
