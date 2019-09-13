@@ -317,13 +317,18 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $user_id = \Auth::id();
+
         $other_user_id = $request->input('other_user_id');
 
         if(isset($other_user_id) && !empty($other_user_id)){
             $user_id = $other_user_id;
         }
 
-        $user = User::with('following.followingUser','follower.followerUser')->find($user_id);
+        $user = User::with('connection_status', 'following.followingUser','follower.followerUser')->find($user_id);
+
+        $user['connections'] = $user['connection_status'];
+        unset($user['connection_status']);
+        
         $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
                         ->where('status','pendding')
                         ->count();
@@ -350,7 +355,7 @@ class UserController extends Controller
                                     ->where('user_id',$user_id)
                                     ->get()
                                     ->toArray())
-                    ->with('following','follower')
+                    ->with('following.followingUser','follower.followerUser','connections')
                     ->get();
 
 
