@@ -16,9 +16,15 @@ class NotificationController extends Controller
     {
         $user = \Auth::user();
         $notification = $user->unreadNotifications()->get();
+
+        $notifications = $notification->map(function ($item, $key) {
+            $item['sender_data'] = User::find($item['data']['sender_id']);
+            return $item;
+        });
+
         return response()->json([
-                'status_code' => 200,
-                'data'        => $notification,
+            'status_code' => 200,
+            'data'        => $notifications,
         ]);
     }
     public function delete(NotificationRequest $request)
