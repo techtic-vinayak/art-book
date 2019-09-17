@@ -16,8 +16,6 @@ class NotificationController extends Controller
     {
         $user = \Auth::user();
         $notification = $user->unreadNotifications()->orderBy('created_at','DESC')->get();
-        // print_r($notification);
-        // exit();
 
         $notifications = $notification->map(function ($item, $key) {
             $item['sender_data'] = User::find($item['data']['sender_id']);
