@@ -16,9 +16,9 @@ class NotificationController extends Controller
     {
         $user = \Auth::user();
 
-        $notification = Notification::select(['*', \DB::raw("id as uuid")])->where('notifiable_id', $user->id)->orderBy('created_at','DESC')->get();
+        $notifications = Notification::where('notifiable_id', $user->id)->orderBy('created_at','DESC')->get();
 
-        $notifications = $notification->map(function ($item, $key) {
+        $notifications = $notifications->map(function ($item, $key) {
             $item['sender_data'] = User::find($item['data']['sender_id']);
             return $item;
         });
@@ -28,6 +28,7 @@ class NotificationController extends Controller
             'data'        => $notifications,
         ]);
     }
+
     public function delete(NotificationRequest $request)
     {
         $user = \Auth::user();
