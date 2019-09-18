@@ -17,4 +17,5 @@ Route::group([
     CRUD::resource('paintingsize', 'PaintingSizeCrudController');
     CRUD::resource('category', 'CategoryCrudController');
     CRUD::resource('art', 'ArtCrudController');
+    CRUD::resource('report-admin', 'ReportAdminCrudController');
 }); // this should be the absolute last line of this file

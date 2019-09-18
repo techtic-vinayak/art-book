@@ -49,8 +49,9 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('categories', 'CategoryController@index');
 
     Route::get('painting-sizes', 'PaintingSizeController@index');
-    
+
     Route::get('notifications', 'NotificationController@index');
     Route::get('delete', 'NotificationController@delete');
 
+    Route::post('report-admin', 'ReportAdminController@index');
 });

@@ -24,6 +24,11 @@
         <span>Users</span>
     </a>
 </li>
+<li>
+    <a href="{{ backpack_url('report-admin') }}"><i class="fa fa-user"></i>
+        <span>Report To Admin</span>
+    </a>
+</li>
 <!-- <li><a href="{{ backpack_url('elfinder') }}"><i class="fa fa-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>
 <li><a href="{{backpack_url('video') }}"><i class="fa fa-list"></i> <span>Videos</span></a></li>
 <li><a href="{{backpack_url('videoreport') }}"><i class="fa fa-list"></i> <span>Video Reports</span></a></li>
