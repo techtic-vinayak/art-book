@@ -66,7 +66,7 @@ class UserController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device' ]);
+        $insert_data = $request->only(['name', 'email', 'password', 'phone', 'dob', 'country', 'profile_pic', 'address', 'latitude', 'longitude', 'gender', 'device_token', 'device']);
 
         if (isset($insert_data['phone']) && !empty($insert_data['phone'])) {
             $insert_data['phone'] = substr($insert_data['phone'], -10);
@@ -328,7 +328,7 @@ class UserController extends Controller
 
         $user['connections'] = $user['connection_status'];
         unset($user['connection_status']);
-        
+
         $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
                         ->where('status','pendding')
                         ->count();

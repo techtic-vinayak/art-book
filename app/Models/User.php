@@ -31,7 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'password', 'remember_token', 'email_verified_at',
     ];
 
-    protected $appends = [ 'user_role' ];
+    protected $appends = ['user_role'];
 
     public function routeNotificationForFcm($notification)
     {
