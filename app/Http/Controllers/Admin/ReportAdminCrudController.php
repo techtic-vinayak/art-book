@@ -39,19 +39,19 @@ class ReportAdminCrudController extends CrudController
         $this->crud->removeAllButtons();
 
         $this->crud->addColumns([
-                [
-                    'name'      => 'user_id',
-                    'label'     => "User",
-                    'type'      => 'select',
-                    'entity'    => 'user',
-                    'attribute' => 'name',
-                ],[
-                    'name'      => 'art_id',
-                    'label'     => "Art",
-                    'type'      => 'select',
-                    'entity'    => 'art',
-                    'attribute' => 'title',
-                ]
+            [
+                'name'      => 'user_id',
+                'label'     => "User",
+                'type'      => 'select',
+                'entity'    => 'user',
+                'attribute' => 'name',
+            ],[
+                'name'      => 'art_id',
+                'label'     => "Art",
+                'type'      => 'select',
+                'entity'    => 'art',
+                'attribute' => 'title',
+            ]
         ]);
 
 

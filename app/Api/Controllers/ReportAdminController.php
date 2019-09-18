@@ -40,7 +40,8 @@ class ReportAdminController extends Controller
 
             $data['msg'] = $user->name.' has been reported for '.$art->title .' Art.';
 
-            $admin = User::where('email', 'techtic.mihir@gmail.com')->first();
+            $admin = new User();
+			$admin->email = env('MAIL_TO_ADDRESS') ? env('MAIL_TO_ADDRESS') : "admin@gmail.com";
             $admin->notify(new ReportAdminNotification($data));
 
          	return response()->json([
