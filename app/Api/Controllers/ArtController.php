@@ -65,7 +65,7 @@ class ArtController extends Controller
             return response()->json([
                     'status_code' => 200,
                     'data'        => $art,
-                    'message'     => 'art posted successfully.'
+                    'message'     => 'Art details posted successfully.'
             ]);
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
