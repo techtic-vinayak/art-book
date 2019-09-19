@@ -42,7 +42,7 @@ class ForgetPasswordNotification extends Notification
     {
         $data = $this->my_notification;
         return (new MailMessage)
-            ->subject('Forgot Notification')
+            ->subject('Forgot Password')
             ->line('Hello '.$data->name.",")
             ->line('Welcome to Art Book')
             ->line('Your Reset Password is :'.$data->password);
