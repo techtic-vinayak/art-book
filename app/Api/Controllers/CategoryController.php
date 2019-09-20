@@ -14,8 +14,8 @@ class CategoryController extends Controller
     {
         $category = Category::get();
         return response()->json([
-                'status_code'   => 200,
-                'category'       => $category
+			'status_code' => 200,
+			'category'    => $category
         ]);
     }
 }

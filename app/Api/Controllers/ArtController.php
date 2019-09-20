@@ -25,8 +25,8 @@ class ArtController extends Controller
 
         $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
         return response()->json([
-                'status_code' => 200,
-                'data'        => $art,
+            'status_code' => 200,
+            'data'        => $art,
         ]);
 
     }
@@ -71,6 +71,7 @@ class ArtController extends Controller
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
         }
     }
+
     /**
      * Video list and sent,received list
      */
@@ -94,15 +95,16 @@ class ArtController extends Controller
             return response()->json([
                 'status_code'   => 200,
                 'data'          => $art,
-                'message'       => 'Art has been Updated successfully'
+                'message'       => 'Art details updated successfully.'
             ]);
 
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 400);
         }
     }
+
     /**
-     * Delete video
+     * Art Details
      */
     public function detailArt($id)
     {
@@ -111,31 +113,36 @@ class ArtController extends Controller
             $art = Art::with('userInfo')->where('id',$id)->first();
             return response()->json([
                 'status_code'   => 200,
-                'data'          => $art,
-                'message'       => 'Art has been Updated successfully'
+                'data'          => $art
             ]);
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 401);
         }
     }
 
+    /**
+     * Delete Art
+     */
     public function deleteArt($id)
     {
         $user = \Auth::user();
         if ($user) {
             $art = Art::destroy($id);
             return response()->json([
-                'status_code'   => 200,
-                'message'       => 'Art has been deleted successfully'
+                'status_code' => 200,
+                'message'     => 'Art details deleted successfully.'
             ]);
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 401);
         }
     }
 
+    /**
+     * Following User Art
+     */
     public function followingUserArt(Request $request)
     {
-        $radius = !empty($request->input('radius')) ? $request->input('radius') :100;
+        $radius = !empty($request->input('radius')) ? $request->input('radius') : 100;
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
 
@@ -185,10 +192,9 @@ class ArtController extends Controller
         $art = $art->orderBy('id','DESC')->get();
 
         return response()->json([
-            'status_code'   => 200,
-            'data'       => $art
+            'status_code' => 200,
+            'data' => $art
         ]);
-
     }
 
 }
