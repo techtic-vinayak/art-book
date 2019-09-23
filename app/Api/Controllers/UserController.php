@@ -350,15 +350,16 @@ class UserController extends Controller
         $latlng  = $request->only(['longitude', 'latitude']);
         $radius  = $request->get('radius', 100);
 
-        $user = User::nearBy($latlng, $radius)->where('id','!=',$user_id)
-                    ->whereNotIn('id', DB::table('user_status')
+        $user = User::nearBy($latlng, $radius)->where('id', '<>', $user_id)
+                ->whereHas('roles', function ($q) {
+                        $q->whereNotIn('name', ['Art Lover']);
+                })->whereNotIn('id', DB::table('user_status')
                                     ->select('block_user_id')
-                                    ->where('user_id',$user_id)
+                                    ->where('user_id', $user_id)
                                     ->get()
                                     ->toArray())
-                    ->with('following.followingUser','follower.followerUser','connections')
+                    ->with('following.followingUser','follower.followerUser','connections', 'roles')
                     ->get();
-
 
         return response()->json([
             'status_code' => 200,

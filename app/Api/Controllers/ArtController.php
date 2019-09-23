@@ -191,10 +191,18 @@ class ArtController extends Controller
 
         $art = $art->orderBy('id','DESC')->get();
 
-        return response()->json([
-            'status_code' => 200,
-            'data' => $art
-        ]);
+        if($art->isEmpty()) {
+            return response()->json([
+                'status_code' => 400,
+                'data' => $art,
+                'message' => 'No data found.Please follow some artist'
+            ]);
+        } else {
+            return response()->json([
+                'status_code' => 200,
+                'data' => $art
+            ]);
+        }
     }
 
 }
