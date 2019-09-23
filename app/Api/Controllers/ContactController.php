@@ -30,7 +30,7 @@ class ContactController extends Controller
 
         if ($flag == 'follow') {
             if($connected == 0){
-                $connection = Connection::create([ 
+                $connection = Connection::create([
                     'sender_id' => $user_id,
                     'receiver_id' => $request->get('receiver_id'),
                     'status' => 'pendding'
@@ -43,13 +43,13 @@ class ContactController extends Controller
                             'title' => 'Sent Request',
                             'msg' => $user->name .' sent you request.',
                         ];
-                
+
                 $userNotification->notify(new ArtNotification($details));
 
                 return response()->json([
                     'status_code' => 200,
                     'data'        => $connection,
-                    'message'     => 'Request send successfully.'
+                    'message'     => 'Request sent successfully.'
                 ], 200);
             }else{
                 return response()->json([
@@ -59,7 +59,7 @@ class ContactController extends Controller
             }
         }
         elseif ($flag == 'unfollow') {
-            
+
             $connected = Connection::where('sender_id' , $user_id)
                             ->where('status', 'accepted')
                             ->where('receiver_id', $request->get('receiver_id'))->first();
@@ -75,7 +75,7 @@ class ContactController extends Controller
                     'status_code' => 400,
                      'message'     => 'no request found'
                 ], 400);
-            }                       
+            }
         }
     }
 
@@ -102,7 +102,7 @@ class ContactController extends Controller
                     ];
                     $userNotification =User::find($connection->sender_id);
                     $userNotification->notify(new ArtNotification($details));
-            
+
                 }
                 return response()->json([
                     'status_code' => 200,
@@ -120,7 +120,7 @@ class ContactController extends Controller
                 $connection->forceDelete();
                 return response()->json([
                     'status_code' => 200,
-                    'message'     => 'Request cancel successfully',
+                    'message'     => 'Request canceled successfully',
                 ]);
             }else{
                 return response()->json([
@@ -154,14 +154,14 @@ class ContactController extends Controller
             ], 200);
 
         }
-       
+
         return response()->json([
             'status_code' => 400,
              'message'     => 'Not found any request.'
         ], 400);
-        
 
-        
+
+
 
     }
     /**

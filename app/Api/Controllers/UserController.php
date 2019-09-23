@@ -146,24 +146,25 @@ class UserController extends Controller
 
             foreach ($fields as $key => $field) {
                 switch ($field) {
-                        case 'dob':
-                        $validated[$field] = 'sometimes|required|nullable|before:today';
-                        break;
-                        case 'phone':
-                        $validated[$field] = 'sometimes|required|numeric|digits:10';
-                        break;
-                        case 'role_id':
-                        $validated[$field] = 'sometimes';
-                        break;
+                    case 'dob':
+                    $validated[$field] = 'sometimes|required|nullable|before:today';
+                    break;
+                    case 'phone':
+                    $validated[$field] = 'sometimes|required|numeric|digits:10';
+                    break;
+                    case 'role_id':
+                    $validated[$field] = 'sometimes';
+                    break;
 
-                        default:
-                        $validated[$field] = 'sometimes|required';
-                        break;
+                    default:
+                    $validated[$field] = 'sometimes|required';
+                    break;
                 }
-
             }
 
-             $request->validate($validated);
+            $request->validate($validated, [
+                'phone.digits' => 'Please enter valid mobile number'
+            ]);
 
              foreach ($fields as $key => $field) {
                 if ($request->exists($field)) {
@@ -211,9 +212,9 @@ class UserController extends Controller
             if (Hash::check($request->old_password, $user->password)) {
                 $user->password = Hash::make($request->password);
                 $user->save();
-                return response()->json(['status_code' => 200, 'message' => 'Password has been updated.'], 200);
+                return response()->json(['status_code' => 200, 'message' => 'Password has been changed successfully.'], 200);
             } else {
-                return response()->json(['status_code' => 400, 'message' => 'Entered old password is incorrect.'], 400);
+                return response()->json(['status_code' => 400, 'message' => 'Entered current password is incorrect.'], 400);
             }
 
         } else {
