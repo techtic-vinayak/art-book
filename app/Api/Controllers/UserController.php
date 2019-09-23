@@ -352,7 +352,7 @@ class UserController extends Controller
 
         $user = User::nearBy($latlng, $radius)->where('id', '<>', $user_id)
                 ->whereHas('roles', function ($q) {
-                        $q->whereNotIn('name', ['Art Lover']);
+                        $q->whereNotIn('name', ['Art Lover', 'Admin']);
                 })->whereNotIn('id', DB::table('user_status')
                                     ->select('block_user_id')
                                     ->where('user_id', $user_id)
