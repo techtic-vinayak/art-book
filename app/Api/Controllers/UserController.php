@@ -47,7 +47,10 @@ class UserController extends Controller
                     'message'       => 'Incorrect email address or password'], 400);
             }
             $user = \Auth::user();
-
+            $update_data = $request->only(['email', 'password', 'device_token', 'device']);
+            $user->device_token = $update_data['device_token'];
+            $user->device = $update_data['device'];
+            $user->save();
             return response()->json([
                 'status_code' => '200',
                 'data'        => $user,
