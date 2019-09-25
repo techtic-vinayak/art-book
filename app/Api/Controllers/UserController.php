@@ -372,11 +372,9 @@ class UserController extends Controller
                 ->whereHas('roles', function ($q) {
                         $q->whereNotIn('name', ['Art Lover', 'Admin']);
                 })->whereNotIn('id', DB::table('user_status')
-                                    ->select('block_user_id')
                                     ->where('user_id', $user_id)
-                                    ->get()
-                                    ->toArray())
-                    ->with('following.followingUser','follower.followerUser','connections', 'roles')
+                                    ->pluck('block_user_id'))
+                    ->with('following.followingUser','follower.followerUser','connections')
                     ->get();
 
         return response()->json([
