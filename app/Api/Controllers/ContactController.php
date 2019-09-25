@@ -97,7 +97,7 @@ class ContactController extends Controller
                     $details = [
                         'user_id' => $connection->sender_id,
                         'sender_id' => $user_id,
-                        'title' => 'Accept Request',
+                        'title' => 'Request Approved',
                         'msg' => $user->name .' accepted your request.',
                     ];
                     $userNotification =User::find($connection->sender_id);
@@ -111,7 +111,7 @@ class ContactController extends Controller
             } else {
                 return response()->json([
                     'status_code' => 400,
-                     'message'     => 'Not found pendding request.'
+                     'message'     => 'Not found pending request.'
                 ], 400);
             }
         } else if ($request->get('status') == 'cancel') {
@@ -120,12 +120,12 @@ class ContactController extends Controller
                 $connection->forceDelete();
                 return response()->json([
                     'status_code' => 200,
-                    'message'     => 'Request canceled successfully',
+                    'message'     => 'Request Canceled',
                 ]);
             }else{
                 return response()->json([
                     'status_code' => 400,
-                     'message'     => 'Not found request.'
+                     'message'     => 'Request Not found.'
                 ], 400);
             }
         }

@@ -44,9 +44,7 @@ class User extends Authenticatable implements JWTSubject
             $query->where('id', '!=', $user_id);
         }
         if (!empty($latlng['latitude']) && !empty($latlng['longitude'])) {
-            $distance = "( 3959 * acos( cos( radians(users.latitude) ) * cos( radians( {$latlng['latitude']} ) ) *
-            cos( radians( {$latlng['longitude']} ) - radians(users.longitude) ) + sin( radians(users.latitude) ) *
-            sin( radians( {$latlng['latitude']} ) ) ) )";
+            $distance = "( 3959 * acos( cos( radians(users.latitude) ) * cos( radians( {$latlng['latitude']} ) ) * cos( radians( {$latlng['longitude']} ) - radians(users.longitude) ) + sin( radians(users.latitude) ) * sin( radians( {$latlng['latitude']} ) ) ) )";
             $query->whereRaw($distance . "<= " . $radius);
             $query->whereNotNull('latitude');
             $query->whereNotNull('longitude');
