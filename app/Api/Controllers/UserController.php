@@ -12,6 +12,7 @@ use App\Api\Requests\UpdateRegisterRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Connection;
+use App\Models\UserStatus;
 use App\Notifications\ForgetPasswordNotification;
 use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
@@ -324,8 +325,22 @@ class UserController extends Controller
         if(isset($other_user_id) && !empty($other_user_id)){
             $user_id = $other_user_id;
         }
-
-        $user = User::with('connection_status', 'following.followingUser','follower.followerUser')->find($user_id);
+       $block_user_ids = UserStatus::where('user_id',$user_id)->pluck('block_user_id');
+       $user = User::with(['connection_status' => function($query) use ($block_user_ids){
+         $query->whereNotIn('sender_id',$block_user_ids);
+        }])
+        ->with(['following' => function($query) use ($block_user_ids){
+                $query->with(['followingUser'  => function($query) use ($block_user_ids){
+                     $query->whereNotIn('id',$block_user_ids);
+            }])->whereNotIn('receiver_id',$block_user_ids);
+        }])
+        ->with(['follower'  => function($query) use ($block_user_ids){
+            $query->with(['followerUser'  => function($query) use ($block_user_ids){
+                $query->whereNotIn('id',$block_user_ids);
+             }])
+        ->whereNotIn('sender_id',$block_user_ids);
+        }])
+        ->find($user_id);
 
         $user['connections'] = $user['connection_status'];
         unset($user['connection_status']);
