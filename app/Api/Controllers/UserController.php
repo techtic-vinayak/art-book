@@ -346,7 +346,7 @@ class UserController extends Controller
         ->find($user_id);
 
         $user['connections'] = $user['connection_status'];
-        // unset($user['connection_status']);
+        unset($user['connection_status']);
 
         $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
                         ->where('status','pendding')
