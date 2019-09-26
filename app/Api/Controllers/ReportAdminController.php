@@ -46,7 +46,7 @@ class ReportAdminController extends Controller
 
          	return response()->json([
                 'status_code' => 200,
-                'message'     => 'Report to admin successfully.'
+                'message'     => 'You have reported to admin successfully.'
             ]);
 
         } else {
