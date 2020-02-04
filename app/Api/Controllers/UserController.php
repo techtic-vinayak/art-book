@@ -395,7 +395,7 @@ class UserController extends Controller
         if($user) {
             $user['apple_id'] = $request_data['apple_id'];
             $user->save();
-            $user->roles()->sync($request->role_id);
+            //$user->roles()->sync($request->role_id);
             //$user->role =  ($user->roles()->first()) ? $user->roles()->first()->id : '';
         }  else  {
             /*if (empty($request->type)) {
@@ -418,13 +418,17 @@ class UserController extends Controller
                     'email'           => $request_data['email'],
                     'apple_id'        => $apple_id,
                 ]);
-                $user->roles()->sync($request->role_id);
+                //$user->roles()->sync($request->role_id);
+               /* $roleId = Role::where('name', $request->type)->pluck('id');
+                $user->roles()->sync($roleId);*/
             }
             /*$user = User::find($user->id);
             $user->roles()->sync($request->role_id);*/
 
+            /*$user = User::find($user->id);
+            $user->roles()->sync($request->role_id);*/
             $user = User::find($user->id);
-            $user->roles()->sync($request->role_id);
+            //$user->role =  ($user->roles()->first()) ? $user->roles()->first()->id : '';
         }
         $token = JWTAuth::fromUser($user);
         return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
