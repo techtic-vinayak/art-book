@@ -17,6 +17,7 @@ return $request->user();
 
 Route::post('login', 'UserController@authenticate');
 Route::post('sign-up', 'UserController@register');
+Route::post('apple-sigup', 'UserController@loginWithApple');
 Route::post('forget-password', 'UserController@forgetPassword');
 Route::post('social-media-register', 'UserController@socialMediaRegister');
 Route::post('set-password', 'UserController@setPassword');

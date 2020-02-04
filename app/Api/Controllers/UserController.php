@@ -9,10 +9,12 @@ use App\Api\Requests\NearByUserRequest;
 use App\Api\Requests\SetPasswordRequest;
 use App\Api\Requests\SocialRegisterRequest;
 use App\Api\Requests\UpdateRegisterRequest;
+use App\Api\Requests\loginWithAppleRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Connection;
 use App\Models\UserStatus;
+use App\Models\Role;
 use App\Notifications\ForgetPasswordNotification;
 use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
@@ -381,6 +383,51 @@ class UserController extends Controller
             'status_code' => 200,
             'data'        => $user,
         ], 200);
+    }
+
+    public function loginWithApple(loginWithAppleRequest $request)
+    {
+        $request_data = $request->only(['name', 'email', 'apple_id']);
+        $apple_id = $request_data['apple_id'];
+        $user = User::where('apple_id', $apple_id)->first();
+        //dd($user);
+
+        if($user) {
+            $user['apple_id'] = $request_data['apple_id'];
+            $user->save();
+            $user->roles()->sync($request->role_id);
+            //$user->role =  ($user->roles()->first()) ? $user->roles()->first()->id : '';
+        }  else  {
+            /*if (empty($request->type)) {
+                return response()->json([
+                    'status_code' => 400,
+                    'message'     => 'please select any type',
+                ]);
+            } */
+            $user = User::where('email', $request_data['email'])->first();
+
+            if($user){
+                /*$user  = User::where('email', $request_data['email'])->update([
+                    'apple_id'        => $apple_id,
+                ]);*/   
+                 $user['apple_id'] = $request_data['apple_id'];
+                 $user->save();
+            } else {
+                $user  = User::create([
+                    'name'            => $request_data['name'],
+                    'email'           => $request_data['email'],
+                    'apple_id'        => $apple_id,
+                ]);
+                $user->roles()->sync($request->role_id);
+            }
+            /*$user = User::find($user->id);
+            $user->roles()->sync($request->role_id);*/
+
+            $user = User::find($user->id);
+            $user->roles()->sync($request->role_id);
+        }
+        $token = JWTAuth::fromUser($user);
+        return response()->json(['status_code' => 200, 'data' => $user, 'token' => $token], 200);
     }
 
     /*
