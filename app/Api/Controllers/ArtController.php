@@ -49,6 +49,7 @@ class ArtController extends Controller
                 'material'                   => $request->get('material'),
                 'subject'                    => $request->get('subject'),
                 'about'                      => $request->get('about'),
+                'price'                      => $request->get('price'),
             );
             $art = Art::create($data);
 
@@ -80,7 +81,7 @@ class ArtController extends Controller
         $user            = \Auth::user();
         if ($user) {
             $art = Art::find($request->id);
-            $fields = ['title', 'image', 'category', 'size', 'art_gallery', 'material', 'subject', 'about'];
+            $fields = ['title', 'image', 'category', 'size', 'art_gallery', 'material', 'subject', 'about','price'];
             foreach ($fields as $key => $field) {
                 if ($request->exists($field)) {
                     switch ($field) {

@@ -15,6 +15,7 @@ class AddArtRequest extends Request
             'material'      => 'nullable|string|max:255',
             'subject'       => 'nullable',
             'about'         => 'nullable',
+            'price'         => 'required|numeric'
         ];
     }
 }

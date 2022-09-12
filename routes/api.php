@@ -55,4 +55,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('delete', 'NotificationController@delete');
 
     Route::post('report-admin', 'ReportAdminController@index');
+
+    //payment
+    Route::post('payment','StripeController@postPaymentStripe');
 });
