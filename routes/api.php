@@ -21,6 +21,7 @@ Route::post('apple-sigup', 'UserController@loginWithApple');
 Route::post('forget-password', 'UserController@forgetPassword');
 Route::post('social-media-register', 'UserController@socialMediaRegister');
 Route::post('set-password', 'UserController@setPassword');
+Route::get('stripe/callback', 'StripeController@store')->name('stripe.callback');
 
 Route::get('login/{social}', 'UserController@socialLogin');
 Route::get('login/{social}/callback', 'UserController@handleProviderCallback');
@@ -58,4 +59,5 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     //payment
     Route::post('payment','StripeController@postPaymentStripe');
+
 });

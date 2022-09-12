@@ -16,7 +16,7 @@ class StripeController extends Controller
     {
         $user_id = Auth::id();
         $art = Art::find($request->id);
-        Stripe\Stripe::setApiKey('sk_test_51LNEIxSIzhjcOeUkNv62ZB4TCm64HH6EvdZUDlyvWqnrM1FJ1Qq7nrejvCtq7D8DmYLvjgoHgipywYdMC7gb7Jq600SbBu4NWN');
+        Stripe\Stripe::setApiKey('sk_test_51LhAPLBaboD5EK2xw5seeY4LA4efxCbO7Sl27HD3Rz973aSEK6uLNOn8vW9UEqAYPwM9LxE1lbktXoKhXc2dWuSp00SWDtJdix');
         $charge_amount  = number_format((htmlentities(30) * 100), 0, '.', '');
         try 
         {
@@ -93,5 +93,62 @@ class StripeController extends Controller
             'data'        => $payment,
         ], 200);
       }  
+    }
+
+    public function store(Request $request)
+    {
+
+        $userId = $request->state;
+        //$userId = Auth::id();
+    	$code = $request->code;
+       
+    	if (empty($userId)) {
+            return response()->json([
+                    'status_code' => 400,
+                    'message'     => 'Oops something went wrong, User Id not found.',
+            ], 400);
+    	} else  if (empty($code)) {
+            return response()->json([
+                    'status_code' => 400,
+                    'message'     => 'Oops something went wrong, Code not found.',
+            ], 400);
+    	}
+    	 ///echo "string";exit;
+        \Stripe\Stripe::setApiKey('sk_test_51LhAPLBaboD5EK2xw5seeY4LA4efxCbO7Sl27HD3Rz973aSEK6uLNOn8vW9UEqAYPwM9LxE1lbktXoKhXc2dWuSp00SWDtJdix');
+        session_start();
+    	$response = \Stripe\OAuth::token([
+    		'grant_type' => 'authorization_code',
+    		'code' => $code
+    	]);
+
+    	$stripe_acc_id = $response->stripe_user_id;
+
+    	$add_stripe_meta = array(
+    		'meta_key' 		=> 	$code,
+    		'meta_value'    => 	$stripe_acc_id
+    	);
+
+    	$stripe_meta = StripeMeta::create($add_stripe_meta);
+    	if(!empty($stripe_meta)){
+
+    		$uset_detail = User::where('id',$userId)->first();
+
+    		if (empty($uset_detail)) {
+                return response()->json([
+                    'status_code' => 400,
+                    'message'     => 'Oops something went wrong, User not found.',
+                ], 400);
+    		}
+
+    		$uset_detail->stripe_id = $stripe_acc_id;
+    		$uset_detail->save();
+
+    		return "<h1 style='text-align: center; margin-top: 7%;font-size: 60px;'>Thank You</h1>";
+    	}else{
+            return response()->json([
+                    'status_code' => 400,
+                    'message'     => 'Oops something went wrong.',
+            ], 400);
+    	}
     }
 }
