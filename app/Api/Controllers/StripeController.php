@@ -10,6 +10,7 @@ use Stripe;
 use App\Models\Art;
 use App\Models\ArtPayment;
 use App\Models\StripeMeta;
+use App\Api\Requests\AddStripeAccountRequest as AddStripeAccount;
 
 class StripeController extends Controller
 {
@@ -18,7 +19,7 @@ class StripeController extends Controller
         $user_id = Auth::id();
         $art = Art::find($request->id);
         Stripe\Stripe::setApiKey(env('stripe_secret_key'));
-        $charge_amount  = number_format((htmlentities(30) * 100), 0, '.', '');
+        $charge_amount  = number_format((htmlentities($art->price) * 100), 0, '.', '');
         try 
         {
             $intents = Stripe\PaymentIntent::create([
@@ -75,7 +76,6 @@ class StripeController extends Controller
             ], 400);
             // Something else happened, completely unrelated to Stripe
         }
-
         if (!empty($charge)) {
 
         if (isset($charge->status)) {
@@ -96,7 +96,7 @@ class StripeController extends Controller
       }  
     }
 
-    public function store(Request $request)
+    public function store(AddStripeAccount $request)
     {
 
         $userId = $request->state;
