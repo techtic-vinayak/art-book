@@ -111,7 +111,7 @@ class ArtController extends Controller
     {
         $user = \Auth::user();
         if ($user) {
-            $art = Art::with('userInfo')->where('id',$id)->first();
+            $art = Art::with('userInfo','paymentData')->where('id',$id)->first();
             return response()->json([
                 'status_code'   => 200,
                 'data'          => $art

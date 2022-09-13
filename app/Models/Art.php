@@ -53,6 +53,10 @@ class Art extends Model
         return $this->belongsTo(Category::class,'category');
     }
 
+    function paymentData() {
+        return $this->hasOne(ArtPayment::class,'art_id','id');
+    }
+
     public function getImageAttribute($value)
     {
         if (!empty($value)) {
