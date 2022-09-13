@@ -10,6 +10,7 @@ use Stripe;
 use App\Models\Art;
 use App\Models\ArtPayment;
 use App\Models\StripeMeta;
+use App\Models\User;
 use App\Api\Requests\AddStripeAccountRequest as AddStripeAccount;
 
 class StripeController extends Controller
