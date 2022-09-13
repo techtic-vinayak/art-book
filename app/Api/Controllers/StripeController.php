@@ -9,6 +9,7 @@ use Validator;
 use Stripe;
 use App\Models\Art;
 use App\Models\ArtPayment;
+use App\Models\StripeMeta;
 
 class StripeController extends Controller
 {
@@ -16,7 +17,7 @@ class StripeController extends Controller
     {
         $user_id = Auth::id();
         $art = Art::find($request->id);
-        Stripe\Stripe::setApiKey('sk_test_51LhAPLBaboD5EK2xw5seeY4LA4efxCbO7Sl27HD3Rz973aSEK6uLNOn8vW9UEqAYPwM9LxE1lbktXoKhXc2dWuSp00SWDtJdix');
+        Stripe\Stripe::setApiKey(env('stripe_secret_key'));
         $charge_amount  = number_format((htmlentities(30) * 100), 0, '.', '');
         try 
         {
@@ -114,7 +115,7 @@ class StripeController extends Controller
             ], 400);
     	}
     	 ///echo "string";exit;
-        \Stripe\Stripe::setApiKey('sk_test_51LhAPLBaboD5EK2xw5seeY4LA4efxCbO7Sl27HD3Rz973aSEK6uLNOn8vW9UEqAYPwM9LxE1lbktXoKhXc2dWuSp00SWDtJdix');
+        \Stripe\Stripe::setApiKey(env('stripe_secret_key'));
         session_start();
     	$response = \Stripe\OAuth::token([
     		'grant_type' => 'authorization_code',
