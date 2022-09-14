@@ -169,7 +169,7 @@ class ArtController extends Controller
 
         $user_data = $user_data->pluck('receiver_id')->toArray();
 
-        $art = Art::with('userInfo')->whereIn('user_id', $user_data);
+        $art = Art::with('userInfo','paymentData')->whereIn('user_id', $user_data);
 
         $fields = ['title', 'art_gallery', 'size', 'category'];
         foreach ($fields as $field) {
