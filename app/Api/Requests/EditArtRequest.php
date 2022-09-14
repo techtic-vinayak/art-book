@@ -16,7 +16,14 @@ class EditArtRequest extends Request
             'material'      => 'nullable|string|max:255',
             'subject'       => 'nullable',
             'about'         => 'nullable',
-            'price'         => 'required|numeric'
+            'price'         => 'required|numeric|regex:/^-?[0-9]+(?:\.[0-9]{1,2})?$/'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'price.regex' => 'The price must be a decimal number.',
         ];
     }
 }
