@@ -15,7 +15,7 @@ class AddArtRequest extends Request
             'material'      => 'nullable|string|max:255',
             'subject'       => 'nullable',
             'about'         => 'nullable',
-            'price'         => 'required|numeric|regex:/^-?[0-9]+(?:\.[0-9]{1,2})?$/'
+            'price'         => 'required|regex:/^-?[0-9]+(?:\.[0-9]{1,2})?$/'
         ];
     }
 
