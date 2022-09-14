@@ -312,7 +312,7 @@ class UserController extends Controller
         $post = $request->all();
         $user = \Auth::user();
         $latlng  = $request->only(['longitude', 'latitude']);
-        $radius  = $request->get('radius', 100);
+        $radius  = $request->get('radius', 1000);
         $users = User::nearBy($latlng, $radius)->has('video')->get();
 
         return response()->json([
@@ -368,7 +368,7 @@ class UserController extends Controller
     {
         $user_id = \Auth::id();
         $latlng  = $request->only(['longitude', 'latitude']);
-        $radius  = $request->get('radius', 100);
+        $radius  = $request->get('radius', 1000);
 
         $user = User::nearBy($latlng, $radius)->where('id', '<>', $user_id)
                 ->whereHas('roles', function ($q) {
