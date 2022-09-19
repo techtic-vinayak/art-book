@@ -24,7 +24,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\LinkedSocialAccount;
 use DB;
-
+use Auth;
 
 /**
  * @resource Auth
@@ -459,8 +459,9 @@ class UserController extends Controller
         if ($logout) {
            $logout->device_token = null;
            $logout->save();
+           Auth::logout();
            return response()->json([
-            'status_code' => 400,
+            'status_code' => 200,
             'message'        => "User logged out successfully.",
             ]);
         } else {
