@@ -30,6 +30,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('update-profile', 'UserController@updateProfile');
     Route::get('profile', 'UserController@getProfile');
     Route::post('change-password', 'UserController@changePassword');
+    Route::post('logout', 'UserController@logout');
     Route::get('user', 'UserController@getAuthenticatedUser');
     Route::get('users', 'UserController@allUser');
 

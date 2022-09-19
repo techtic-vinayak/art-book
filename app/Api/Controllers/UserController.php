@@ -452,4 +452,30 @@ class UserController extends Controller
        }
     }
     */
+
+    public function logout(Request $request)
+    {
+        $logout = User::where('device_token', 'LIKE', '%' . $request->device_token . '%')->first();
+        if ($logout) {
+            if ($logout->delete()) {
+                return response()->json([
+                    'status_code' => 200,
+                    'message' => "User logged out successfully.",
+                ]);
+            } else {
+                 return response()->json([
+                'status_code' => 400,
+                'message'        => "Sorry, Device Token Not Found",
+            ]);
+            }
+
+        } else {
+             return response()->json([
+                'status_code' => 400,
+                'message'        => "Sorry, The user cannot be logged ",
+            ]);
+            
+        }
+
+    }
 }
