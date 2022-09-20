@@ -18,12 +18,13 @@ class ArtController extends Controller
     {
         $user_id         = \Auth::id();
         $other_user_id = $request->input('other_user_id');
+
         if( isset($other_user_id) && !empty($other_user_id) )
         {
             $user_id = $other_user_id;
         }
 
-        $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
+        $art = Art::with('art')->where('user_id',$user_id)->orderBy('id','DESC')->get();
         return response()->json([
             'status_code' => 200,
             'data'        => $art,
@@ -169,7 +170,7 @@ class ArtController extends Controller
 
         $user_data = $user_data->pluck('receiver_id')->toArray();
 
-        $art = Art::with('userInfo','paymentData')->whereIn('user_id', $user_data);
+        $art = Art::with('userInfo','paymentData','art')->whereIn('user_id', $user_data);
 
         $fields = ['title', 'art_gallery', 'size', 'category'];
         foreach ($fields as $field) {
