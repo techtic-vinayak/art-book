@@ -6,6 +6,7 @@ use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use App\Scopes\EventScope;
+use Auth;
 
 class Art extends Model
 {
@@ -63,5 +64,10 @@ class Art extends Model
             return $this->getFileUrl($value);
         }
     }
+
+    public function reportAdmin() {
+        return $this->hasOne(ReportAdmin::class)->where('user_id','=',Auth::id());
+    }
+
 
 }
