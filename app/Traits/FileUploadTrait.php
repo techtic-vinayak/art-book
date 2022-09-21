@@ -82,7 +82,7 @@ trait FileUploadTrait
 
             $finfo   = new \finfo(FILEINFO_MIME_TYPE);
             $mime    = $finfo->buffer($contents);
-            $fileext = mime_to_ext($mime);
+            $fileext = $mime;
 
             if (!$fileext) {
                 $fileext = "." . $url_arr[$ct - 1];

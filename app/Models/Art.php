@@ -55,7 +55,7 @@ class Art extends Model
     }
 
     function paymentData() {
-        return $this->hasOne(ArtPayment::class,'art_id','id');
+        return $this->hasOne(ArtPayment::class,'art_id','id')->where('to_user_id',Auth::id());
     }
 
     public function getImageAttribute($value)

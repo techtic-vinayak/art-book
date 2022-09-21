@@ -8,7 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Notifications\ArtNotification;
-
+use App\Models\Category;
+use App\Models\PaintingSize;
 /**
  * @resource Contact
  */
@@ -24,7 +25,7 @@ class ArtController extends Controller
             $user_id = $other_user_id;
         }
 
-        $art = Art::with('art')->where('user_id',$user_id)->orderBy('id','DESC')->get();
+        $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
         return response()->json([
             'status_code' => 200,
             'data'        => $art,
@@ -38,22 +39,23 @@ class ArtController extends Controller
     public function addArt(AddArtRequest $request)
     {
         $user          = \Auth::user();
-
+        $category = Category::where('name',$request->get('category'))->value('id');
+        $PaintingSize = PaintingSize::where('size',$request->get('size'))->value('id');
         if ($user) {
             $data = array(
                 'user_id'                    => $user->id,
                 'title'                      => $request->get('title'),
                 'image'                      => $request->file('image'),
-                'category'                   => $request->get('category'),
-                'size'                       => $request->get('size'),
+                'category'                   => $category,
+                'size'                       => $PaintingSize,
                 'art_gallery'                => $request->get('art_gallery'),
                 'material'                   => $request->get('material'),
                 'subject'                    => $request->get('subject'),
                 'about'                      => $request->get('about'),
-                'price'                      => $request->get('price'),
+                'price'                      => floatval($request->get('price')),
             );
             $art = Art::create($data);
-
+            $art['category'] =  Category::where('id',$art['category'])->value('name');
             $users = $user->following()->with('followingUser')->get();
             foreach ($users as $user_data) {
                 $details = [
