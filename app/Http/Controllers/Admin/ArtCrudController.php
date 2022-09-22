@@ -118,6 +118,8 @@ class ArtCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        //$request['price']  = "".round(floatval($request['price']),2)."";
+
         //$request['user_id']  = 1;
         // your additional operations before save here
         $redirect_location   = parent::storeCrud($request);
@@ -128,8 +130,11 @@ class ArtCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
+       set_time_limit(-1);
+        //$request['price']  = "".round(floatval($request['price']),2)."";
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
+
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
         return $redirect_location;

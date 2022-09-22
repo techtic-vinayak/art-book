@@ -12,6 +12,7 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () {
     // custom admin routes
+    CRUD::resource('users', 'UserCrudController');
     CRUD::resource('videoreport', 'VideoReportCrudController');
     CRUD::resource('video', 'VideoCrudController');
     CRUD::resource('paintingsize', 'PaintingSizeCrudController');
