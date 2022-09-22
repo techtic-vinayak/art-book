@@ -99,9 +99,7 @@ class ArtCrudController extends CrudController
                 ],  [
                     'name'      => 'size',
                     'label'     => "Painting Size",
-                    'type'      => 'select',
-                    'entity'    => 'sizeData',
-                    'attribute' => 'size',
+                 
                 ], [
                     'name'   => 'image',
                     'label'  => "Image",

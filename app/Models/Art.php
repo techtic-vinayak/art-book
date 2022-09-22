@@ -63,5 +63,6 @@ class Art extends Model
             return $this->getFileUrl($value);
         }
     }
+    
 
 }
