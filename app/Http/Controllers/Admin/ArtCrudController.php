@@ -120,7 +120,7 @@ class ArtCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
-        //$request['user_id']  = 1;
+        $request['price']  = number_format($request['price'],2);
         // your additional operations before save here
         $redirect_location   = parent::storeCrud($request);
         // your additional operations after save here
@@ -130,6 +130,7 @@ class ArtCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
+        $request['price']  = number_format($request['price'],2);
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
         // your additional operations after save here
