@@ -96,6 +96,7 @@ class ArtCrudController extends CrudController
                     'type'      => 'select',
                     'entity'    => 'categoryData',
                     'attribute' => 'name',
+                    'model'     => "App\Models\Category"
                 ],  [
                     'name'      => 'size',
                     'label'     => "Painting Size",

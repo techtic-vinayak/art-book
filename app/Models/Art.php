@@ -6,6 +6,7 @@ use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use App\Scopes\EventScope;
+use Auth;
 
 class Art extends Model
 {
@@ -54,7 +55,7 @@ class Art extends Model
     }
 
     function paymentData() {
-        return $this->hasOne(ArtPayment::class,'art_id','id');
+        return $this->hasOne(ArtPayment::class,'art_id','id')->where('to_user_id',Auth::id());
     }
 
     public function getImageAttribute($value)
@@ -64,5 +65,10 @@ class Art extends Model
         }
     }
     
+
+    public function reportAdmin() {
+        return $this->hasOne(ReportAdmin::class)->where('user_id','=',Auth::id());
+    }
+
 
 }
