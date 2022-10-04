@@ -12,6 +12,10 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () {
     // custom admin routes
+    Route::get('report-admin/reject/{id}', 'ReportAdminCrudController@reject');
+
+    Route::get('report-admin/approve/{id}', 'ReportAdminCrudController@approve');
+    CRUD::resource('users', 'UserCrudController');
     CRUD::resource('videoreport', 'VideoReportCrudController');
     CRUD::resource('video', 'VideoCrudController');
     CRUD::resource('paintingsize', 'PaintingSizeCrudController');

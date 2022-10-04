@@ -64,6 +64,7 @@ class RoleCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        dd($request->all());
         //otherwise, changes won't have effect
         \Cache::forget('spatie.permission.cache');
 

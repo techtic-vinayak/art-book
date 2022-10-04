@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Notifications\ArtNotification;
 use App\Models\Category;
 use App\Models\PaintingSize;
+use App\Models\ReportAdmin;
+use Auth;
 /**
  * @resource Contact
  */
@@ -25,7 +27,7 @@ class ArtController extends Controller
             $user_id = $other_user_id;
         }
 
-        $art = Art::where('user_id',$user_id)->orderBy('id','DESC')->get();
+        $art = Art::where('art.user_id',$user_id)->orderBy('art.id','DESC')->join('report_admin','report_admin.art_id','=','art.id')->where('art.user_id',Auth::user()->id)->where('report_admin.status','=','0')->get();
         return response()->json([
             'status_code' => 200,
             'data'        => $art,
@@ -82,8 +84,12 @@ class ArtController extends Controller
     public function editArt(EditArtRequest $request)
     {
         $user            = \Auth::user();
+
+        $request['category'] = Category::where('name',$request['category'])->value('id');
+        $request['size'] = PaintingSize::where('size',$request['size'])->value('id');
         if ($user) {
             $art = Art::find($request->id);
+
             $fields = ['title', 'image', 'category', 'size', 'art_gallery', 'material', 'subject', 'about','price'];
             foreach ($fields as $key => $field) {
                 if ($request->exists($field)) {
@@ -110,15 +116,15 @@ class ArtController extends Controller
     /**
      * Art Details
      */
-    public function detailArt($id)
+   public function detailArt($id)
     {
         $user = \Auth::user();
         if ($user) {
-            $art = Art::with('userInfo','paymentData')->where('id',$id)->first();
+            $art = Art::with('userInfo','paymentData')->join('report_admin','report_admin.art_id','=','art.id')->where('art.id',$id)->where('report_admin.status','=','0')->get();
             return response()->json([
                 'status_code'   => 200,
                 'data'          => $art
-            ]);
+            ]); 
         } else {
             return response()->json(['status_code' => 400, 'message' => 'Invalid user id.'], 401);
         }
@@ -172,7 +178,7 @@ class ArtController extends Controller
 
         $user_data = $user_data->pluck('receiver_id')->toArray();
 
-        $art = Art::with('userInfo','paymentData')->doesntHave('reportAdmin')->whereIn('user_id', $user_data);
+        $art = Art::with('userInfo','paymentData')->doesntHave('reportAdmin')->join('report_admin','report_admin.art_id','=','art.id')->where('report_admin.status','=','0')->whereIn('art.user_id', $user_data);
 
         $fields = ['title', 'art_gallery', 'size', 'category'];
         foreach ($fields as $field) {
@@ -193,7 +199,7 @@ class ArtController extends Controller
             }
         }
 
-        $art = $art->orderBy('id','DESC')->get();
+        $art = $art->orderBy('art.id','DESC')->get();
 
         if($art->isEmpty()) {
             return response()->json([

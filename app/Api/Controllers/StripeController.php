@@ -12,6 +12,7 @@ use App\Models\ArtPayment;
 use App\Models\StripeMeta;
 use App\Models\User;
 use App\Api\Requests\AddStripeAccountRequest as AddStripeAccount;
+use Config;
 
 class StripeController extends Controller
 {
@@ -19,7 +20,7 @@ class StripeController extends Controller
     {
         $user_id = Auth::id();
         $art = Art::find($request->id);
-        Stripe\Stripe::setApiKey(env('stripe_secret_key'));
+        Stripe\Stripe::setApiKey(Config::get('constants.strip.STRIPE_SECRET'));
         $charge_amount  = number_format((htmlentities($art->price) * 100), 0, '.', '');
         try 
         {
@@ -116,7 +117,7 @@ class StripeController extends Controller
             ], 400);
     	}
     	 ///echo "string";exit;
-        \Stripe\Stripe::setApiKey(env('stripe_secret_key'));
+        \Stripe\Stripe::setApiKey(Config::get('constants.strip.STRIPE_SECRET'));
         session_start();
     	$response = \Stripe\OAuth::token([
     		'grant_type' => 'authorization_code',

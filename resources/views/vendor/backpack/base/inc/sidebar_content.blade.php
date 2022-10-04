@@ -20,7 +20,7 @@
     </a>
 </li>
 <li>
-    <a href="{{ backpack_url('user') }}"><i class="fa fa-user"></i>
+    <a href="{{ backpack_url('users') }}"><i class="fa fa-user"></i>
         <span>Users</span>
     </a>
 </li>

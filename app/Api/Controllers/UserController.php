@@ -120,7 +120,7 @@ class UserController extends Controller
         $user = \Auth::user();
         $radius = $request->get('radius', 100);
         $users = User::nearBy(['longitude'=> $user->longitude, 'latitude'=>
-        $user->latitude], $radius)
+            $user->latitude], $radius)
         ->has('video')->get();
 
         return response()->json([
@@ -172,7 +172,7 @@ class UserController extends Controller
                 'phone.digits' => 'Please enter valid mobile number'
             ]);
 
-             foreach ($fields as $key => $field) {
+            foreach ($fields as $key => $field) {
                 if ($request->exists($field)) {
                     switch ($field) {
                         case 'dob':
@@ -257,7 +257,7 @@ class UserController extends Controller
         $name=$userData->getName();
 
         $linkedSocialAccount =LinkedSocialAccount::where('provider_name', $provider)
-            ->where('provider_id', $social_id)->first();
+        ->where('provider_id', $social_id)->first();
 
         if ($linkedSocialAccount) {
             $user = $linkedSocialAccount->user;
@@ -323,6 +323,7 @@ class UserController extends Controller
 
     public function getProfile(Request $request)
     {
+
         $user_id = \Auth::id();
 
         $other_user_id = $request->input('other_user_id');
@@ -330,20 +331,20 @@ class UserController extends Controller
         if(isset($other_user_id) && !empty($other_user_id)){
             $user_id = $other_user_id;
         }
-       $block_user_ids = UserStatus::where('user_id',$user_id)->pluck('block_user_id');
-       $user = User::with(['connection_status' => function($query) use ($block_user_ids){
-         $query->whereNotIn('sender_id',$block_user_ids);
-        }])
+        $block_user_ids = UserStatus::where('user_id',$user_id)->pluck('block_user_id');
+        $user = User::with(['connection_status' => function($query) use ($block_user_ids){
+           $query->whereNotIn('sender_id',$block_user_ids);
+       }])
         ->with(['following' => function($query) use ($block_user_ids){
-                $query->with(['followingUser'  => function($query) use ($block_user_ids){
-                     $query->whereNotIn('id',$block_user_ids);
-            }])->whereNotIn('receiver_id',$block_user_ids);
+            $query->with(['followingUser'  => function($query) use ($block_user_ids){
+               $query->whereNotIn('id',$block_user_ids);
+           }])->whereNotIn('receiver_id',$block_user_ids);
         }])
         ->with(['follower'  => function($query) use ($block_user_ids){
             $query->with(['followerUser'  => function($query) use ($block_user_ids){
                 $query->whereNotIn('id',$block_user_ids);
-             }])
-        ->whereNotIn('sender_id',$block_user_ids);
+            }])
+            ->whereNotIn('sender_id',$block_user_ids);
         }])
         ->find($user_id);
 
@@ -351,17 +352,122 @@ class UserController extends Controller
         unset($user['connection_status']);
 
         $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
-                        ->where('status','pendding')
-                        ->count();
+        ->where('status','pendding')
+        ->count();
 
         $user['pendding_received_request'] = Connection::where('receiver_id' , $user_id)
-                        ->where('status','pendding')
-                        ->count();
+        ->where('status','pendding')
+        ->count();
 
         return response()->json([
-                    'status_code' => 200,
-                    'data'        => $user,
-                ], 200);
+            'status_code' => 200,
+            'data'        => $user,
+        ], 200);
+    }
+
+    public function getProfilecount(Request $request)
+    {
+        $user_id = \Auth::id();
+
+        $other_user_id = $request->input('other_user_id');
+
+        if(isset($other_user_id) && !empty($other_user_id)){
+            $user_id = $other_user_id;
+        }
+        $block_user_ids = UserStatus::where('user_id',$user_id)->pluck('block_user_id');
+       
+        if($request['type'] == 'following' && Auth::user()->hasRole('Artist')){
+            $user = "";
+            $user = $this->artFollowing($user,$user_id,$block_user_ids);
+            $user = $this->artDataSetup($user,$user_id);
+        }elseif($request['type'] == 'follower'  && Auth::user()->hasRole('Art Lover')){
+            $user = "";
+            $user = $this->artFollower($user,$user_id,$block_user_ids);
+            $user = $this->artDataSetup($user,$user_id);
+             
+        }elseif(Auth::user()->hasRole('Both')){
+            $user = array();
+            $data1 = $this->artFollowing($user,$user_id,$block_user_ids);
+            $data1 = $this->artDataSetup($data1,$user_id);
+            $data2 = $this->artFollower($user,$user_id,$block_user_ids);
+            $data2  = $this->artDataSetup($data2,$user_id);
+
+            $user['following_data'] = $data1;
+            $user['follower_data'] = $data2;
+        }else{
+            return response()->json([
+                'status_code' => 400,
+                'message'        => "Sorry, Data not available.",
+            ]); 
+        }
+       
+
+        return response()->json([
+            'status_code' => 200,
+            'data'        => $user,
+        ], 200);
+
+    }
+    public function artDataSetup($user,$user_id)
+    {
+        $user['connections'] = $user['connection_status'];
+            unset($user['connection_status']);
+
+        $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
+        ->where('status','pendding')
+        ->count();
+
+        $user['pendding_received_request'] = Connection::where('receiver_id' , $user_id)
+        ->where('status','pendding')
+        ->count();
+            return $user;
+    }
+
+
+    public function artFollowing($user,$user_id,$block_user_ids)
+    {
+        $user =   User::with(['following' => function($query) use ($block_user_ids){
+            $query->with(['followingUser' => function($query) use ($block_user_ids){
+                   $query->whereNotIn('id',$block_user_ids);
+               }])->whereNotIn('receiver_id',$block_user_ids);
+            }])->find($user_id);
+            foreach($user['following'] as $key => $values){
+
+                foreach($values['followingUser'] as $key_follow => $values_following){
+                    //dd($values['followingUser']['id']);
+                     $block_ids = UserStatus::where('user_id',$values['followingUser']['id'])->pluck('block_user_id');
+                   $data= User::withCount(['following' => function($query) use ($block_ids){
+                        $query->with(['followingUser' => function($query) use ($block_ids){
+                               $query->whereNotIn('id',$block_ids);
+                           }])->whereNotIn('receiver_id',$block_ids);
+                        }])->find($user_id);
+
+                   $user['following'][$key]['followingUser' ]['following_count'] = $data->following_count;
+                }
+            }
+       return $user;
+    }
+    public function artFollower($user,$user_id,$block_user_ids)
+    {
+       $user = User::With(['follower' => function($query) use ($block_user_ids){
+                $query->with(['followerUser' => function($query) use ($block_user_ids){
+                   $query->whereNotIn('id',$block_user_ids);
+               }])->whereNotIn('sender_id',$block_user_ids);
+            }])->find($user_id);
+            foreach($user['follower'] as $key => $values){
+
+                foreach($values['followerUser'] as $key_follower => $values_follower){
+                    //dd($values['followingUser']['id']);
+                     $block_ids = UserStatus::where('user_id',$values['followerUser']['id'])->pluck('block_user_id');
+                   $data= User::withCount(['follower' => function($query) use ($block_ids){
+                        $query->with(['followerUser' => function($query) use ($block_ids){
+                               $query->whereNotIn('id',$block_ids);
+                           }])->whereNotIn('sender_id',$block_ids);
+                        }])->find($user_id);
+                   $user['follower'][$key]['followerUser']['follower_count'] = $data->follower_count;
+                }
+            }
+        return $user;
     }
 
     public function allUser(NearByUserRequest $request)
@@ -371,13 +477,13 @@ class UserController extends Controller
         $radius  = $request->get('radius', 1000);
 
         $user = User::nearBy($latlng, $radius)->where('id', '<>', $user_id)
-                ->whereHas('roles', function ($q) {
-                        $q->whereNotIn('name', ['Art Lover', 'Admin']);
-                })->whereNotIn('id', DB::table('user_status')
-                                    ->where('user_id', $user_id)
-                                    ->pluck('block_user_id'))
-                    ->with('following.followingUser','follower.followerUser','connections')
-                    ->get();
+        ->whereHas('roles', function ($q) {
+            $q->whereNotIn('name', ['Art Lover', 'Admin']);
+        })->whereNotIn('id', DB::table('user_status')
+        ->where('user_id', $user_id)
+        ->pluck('block_user_id'))
+        ->with('following.followingUser','follower.followerUser','connections')
+        ->get();
 
         return response()->json([
             'status_code' => 200,
@@ -410,8 +516,8 @@ class UserController extends Controller
                 /*$user  = User::where('email', $request_data['email'])->update([
                     'apple_id'        => $apple_id,
                 ]);*/   
-                 $user['apple_id'] = $request_data['apple_id'];
-                 $user->save();
+                $user['apple_id'] = $request_data['apple_id'];
+                $user->save();
             } else {
                 $user  = User::create([
                     'name'            => $request_data['name'],
@@ -420,8 +526,8 @@ class UserController extends Controller
                 ]);
                 //$user->roles()->sync($request->role_id);
                /* $roleId = Role::where('name', $request->type)->pluck('id');
-                $user->roles()->sync($roleId);*/
-            }
+               $user->roles()->sync($roleId);*/
+           }
             /*$user = User::find($user->id);
             $user->roles()->sync($request->role_id);*/
 
@@ -457,20 +563,20 @@ class UserController extends Controller
     {
         $logout = User::where('device_token', 'LIKE', '%' . $request->device_token . '%')->first();
         if ($logout) {
-           $logout->device_token = null;
-           $logout->save();
-           Auth::logout();
-           return response()->json([
+         $logout->device_token = null;
+         $logout->save();
+         Auth::logout();
+         return response()->json([
             'status_code' => 200,
             'message'        => "User logged out successfully.",
-            ]);
-        } else {
-             return response()->json([
-                'status_code' => 400,
-                'message'        => "Sorry, The user cannot be logged ",
-            ]);
-            
-        }
+        ]);
+     } else {
+       return response()->json([
+        'status_code' => 400,
+        'message'        => "Sorry, The user cannot be logged ",
+    ]);
 
-    }
+   }
+
+}
 }

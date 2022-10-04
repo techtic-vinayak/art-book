@@ -27,7 +27,7 @@ class Art extends Model
 
     public function getPantingSizeAttribute()
     {
-        $this->paintingSize();
+        $this->sizeData();
     }
 
     public function getCategoryNameAttribute ()
@@ -46,7 +46,7 @@ class Art extends Model
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
-    function sizeData() {
+    public function sizeData() {
          return $this->belongsTo(PaintingSize::class, 'size');
     }
 
@@ -64,10 +64,23 @@ class Art extends Model
             return $this->getFileUrl($value);
         }
     }
+    
 
     public function reportAdmin() {
         return $this->hasOne(ReportAdmin::class)->where('user_id','=',Auth::id());
     }
+
+
+    public function reportAdminStatus()
+    {
+        return $this->hasMany('App\Models\ReportAdmin', 'art_id', 'id');
+    }
+
+    public function artist_list(){        
+        
+       return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+    
 
 
 }

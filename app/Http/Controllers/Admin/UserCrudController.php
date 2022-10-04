@@ -1,6 +1,6 @@
 <?php
 
-namespace Backpack\PermissionManager\app\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
@@ -113,9 +113,6 @@ class UserCrudController extends CrudController
      */
     public function store(StoreRequest $request)
     {
-        //$request['user_type'] = $request['roles_show'][0];
-        unset($request['roles_show']);
-
         $this->handlePasswordInput($request);
 
         return parent::storeCrud($request);
@@ -130,7 +127,6 @@ class UserCrudController extends CrudController
      */
     public function update(UpdateRequest $request)
     {
-        unset($request['roles_show']);
         $this->handlePasswordInput($request);
 
         return parent::updateCrud($request);

@@ -35,6 +35,7 @@ class ContactController extends Controller
                     'receiver_id' => $request->get('receiver_id'),
                     'status' => 'pendding'
                 ]);
+                
                 $userNotification =User::find($request->get('receiver_id'));
 
                 $details = [
@@ -64,8 +65,15 @@ class ContactController extends Controller
                             ->where('status', 'accepted')
                             ->where('receiver_id', $request->get('receiver_id'))->first();
 
+            // $connected_reverce = Connection::where('sender_id' , $request->get('receiver_id'))
+            //                 ->where('status', 'accepted')
+            //                 ->where('receiver_id', $user_id)->first();
+
             if (!empty($connected)) {
                 $connected->forceDelete();
+                // if(!empty($connected_reverce)){
+                //     $connected_reverce->forceDelete();
+                // }
                 return response()->json([
                     'status_code' => 200,
                      'message'     => 'unfollow successfully.'
@@ -100,6 +108,11 @@ class ContactController extends Controller
                         'title' => 'Request Approved',
                         'msg' => $user->name .' accepted your request.',
                     ];
+                    // Connection::create([
+                    //     'sender_id' => $user_id,
+                    //     'receiver_id' =>  $connection->sender_id,
+                    //     'status' => 'accepted'
+                    // ]);
                     $userNotification =User::find($connection->sender_id);
                     $userNotification->notify(new ArtNotification($details));
 

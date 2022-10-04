@@ -29,6 +29,7 @@ Route::get('login/{social}/callback', 'UserController@handleProviderCallback');
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('update-profile', 'UserController@updateProfile');
     Route::get('profile', 'UserController@getProfile');
+    Route::get('getProfilecount', 'UserController@getProfilecount');
     Route::post('change-password', 'UserController@changePassword');
     Route::post('logout', 'UserController@logout');
     Route::get('user', 'UserController@getAuthenticatedUser');

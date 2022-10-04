@@ -138,4 +138,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Notification::class,'notifiable_id');
     }
+
+    public function artist_list(){        
+        return  $this->whereHas('roles', function($q){
+            $q->where('name', 'Artist');
+        })->get();
+    }
 }

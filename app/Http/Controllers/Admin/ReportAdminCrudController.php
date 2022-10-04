@@ -7,6 +7,8 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 // VALIDATION: change the requests to match your own file names if you need form validation
 use App\Http\Requests\ReportAdminRequest as StoreRequest;
 use App\Http\Requests\ReportAdminRequest as UpdateRequest;
+use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class ReportAdminCrudController
@@ -22,10 +24,12 @@ class ReportAdminCrudController extends CrudController
         | CrudPanel Basic Information
         |--------------------------------------------------------------------------
         */
+       
         $this->crud->setModel('App\Models\ReportAdmin');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/report-admin');
         $this->crud->setEntityNameStrings('reportadmin', 'report to admin');
-
+        $this->crud->addButtonFromView('line','reject','reject','end');
+       
         /*
         |--------------------------------------------------------------------------
         | CrudPanel Configuration
@@ -36,7 +40,6 @@ class ReportAdminCrudController extends CrudController
         $this->crud->setFromDb();
 
         $this->crud->denyAccess(['create', 'update', 'delete']);
-        $this->crud->removeAllButtons();
 
         $this->crud->addColumns([
             [
@@ -51,6 +54,16 @@ class ReportAdminCrudController extends CrudController
                 'type'      => 'select',
                 'entity'    => 'art',
                 'attribute' => 'title',
+            ]
+            ,[
+                'name'      => 'status',
+                'label'     => "Status",
+                'type'  => 'boolean',
+                'options' => [
+                    0 => 'Rejected',
+                    1 => 'Approved',
+                ],
+
             ]
         ]);
 
@@ -77,4 +90,34 @@ class ReportAdminCrudController extends CrudController
         // use $this->data['entry'] or $this->crud->entry
         return $redirect_location;
     }
+
+    public function approve($id)
+    {
+        \App\Models\ReportAdmin::where('id',$id)->update(['status'=>'1']);
+         Alert::success('Approved successfully')->flash();
+         return \Redirect::back();
+    }
+
+    public function reject($id)
+    {
+         \App\Models\ReportAdmin::where('id',$id)->update(['status'=>'0']);
+         Alert::success('Reject successfully')->flash();
+         return \Redirect::back();
+    }
+
+    //    protected function setupUpdateOperation()
+    // {
+    //     $this->crud->setValidation(UserEditRequest::class);
+    //     $this->setupCreateOperation();
+    //     $this->crud->removeField('status');
+    //     $this->crud->addField([
+    //          'name'        => 'status',
+    //         'label'       => "Status",
+    //         'type'        => 'select2_from_array',
+    //         'options'     => [1 => 'Active', 0 => 'Inactive'],
+    //         'allows_null' => false,
+    //     ]);
+   
+    // }
+
 }
