@@ -91,11 +91,11 @@ class ContactController extends Controller
     {
         $user_id = \Auth::id();
         $user = \Auth::user();
-
+        $id = $request->get('request_id');
         if( ($request->get('status') == 'accepted') || ($request->get('status') == 'rejected') ){
             $connection = Connection::where('receiver_id' , $user_id)
                     ->where('status','pendding')
-                    ->find($request->get('request_id'));
+                    ->find($id);
             if (!empty($connection)) {
                 $connection->status = $request->get('status');
                 $connection->save();

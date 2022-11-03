@@ -367,7 +367,7 @@ class UserController extends Controller
 
     public function getProfilecount(Request $request)
     {
-        $user_id = \Auth::id();
+       $user_id = \Auth::id();
 
         $other_user_id = $request->input('other_user_id');
 
@@ -375,58 +375,9 @@ class UserController extends Controller
             $user_id = $other_user_id;
         }
         $block_user_ids = UserStatus::where('user_id',$user_id)->pluck('block_user_id');
-       
-        if($request['type'] == 'following' && Auth::user()->hasRole('Artist')){
-            $user = "";
-            $user = $this->artFollowing($user,$user_id,$block_user_ids);
-            $user = $this->artDataSetup($user,$user_id);
-        }elseif($request['type'] == 'follower'  && Auth::user()->hasRole('Art Lover')){
-            $user = "";
-            $user = $this->artFollower($user,$user_id,$block_user_ids);
-            $user = $this->artDataSetup($user,$user_id);
-             
-        }elseif(Auth::user()->hasRole('Both')){
-            $user = array();
-            $data1 = $this->artFollowing($user,$user_id,$block_user_ids);
-            $data1 = $this->artDataSetup($data1,$user_id);
-            $data2 = $this->artFollower($user,$user_id,$block_user_ids);
-            $data2  = $this->artDataSetup($data2,$user_id);
-
-            $user['following_data'] = $data1;
-            $user['follower_data'] = $data2;
-        }else{
-            return response()->json([
-                'status_code' => 400,
-                'message'        => "Sorry, Data not available.",
-            ]); 
-        }
-       
-
-        return response()->json([
-            'status_code' => 200,
-            'data'        => $user,
-        ], 200);
-
-    }
-    public function artDataSetup($user,$user_id)
-    {
-        $user['connections'] = $user['connection_status'];
-            unset($user['connection_status']);
-
-        $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
-        ->where('status','pendding')
-        ->count();
-
-        $user['pendding_received_request'] = Connection::where('receiver_id' , $user_id)
-        ->where('status','pendding')
-        ->count();
-            return $user;
-    }
-
-
-    public function artFollowing($user,$user_id,$block_user_ids)
-    {
-        $user =   User::with(['following' => function($query) use ($block_user_ids){
+        $user = "";
+        if($request['type'] == 'following'){
+            $user =  User::with(['following' => function($query) use ($block_user_ids){
             $query->with(['followingUser' => function($query) use ($block_user_ids){
                    $query->whereNotIn('id',$block_user_ids);
                }])->whereNotIn('receiver_id',$block_user_ids);
@@ -441,15 +392,13 @@ class UserController extends Controller
                                $query->whereNotIn('id',$block_ids);
                            }])->whereNotIn('receiver_id',$block_ids);
                         }])->find($user_id);
-
-                   $user['following'][$key]['followingUser' ]['following_count'] = $data->following_count;
+                   
+                   $user['following'][$key]['followingUser']['following_count'] =Connection::where('receiver_id',$values['followingUser']['id'])->where('status','accepted')->count();
                 }
             }
-       return $user;
-    }
-    public function artFollower($user,$user_id,$block_user_ids)
-    {
-       $user = User::With(['follower' => function($query) use ($block_user_ids){
+        }else if($request['type'] == 'follower'){
+          
+            $user = User::With(['follower' => function($query) use ($block_user_ids){
                 $query->with(['followerUser' => function($query) use ($block_user_ids){
                    $query->whereNotIn('id',$block_user_ids);
                }])->whereNotIn('sender_id',$block_user_ids);
@@ -457,17 +406,41 @@ class UserController extends Controller
             foreach($user['follower'] as $key => $values){
 
                 foreach($values['followerUser'] as $key_follower => $values_follower){
-                    //dd($values['followingUser']['id']);
+                  
                      $block_ids = UserStatus::where('user_id',$values['followerUser']['id'])->pluck('block_user_id');
                    $data= User::withCount(['follower' => function($query) use ($block_ids){
                         $query->with(['followerUser' => function($query) use ($block_ids){
                                $query->whereNotIn('id',$block_ids);
                            }])->whereNotIn('sender_id',$block_ids);
                         }])->find($user_id);
-                   $user['follower'][$key]['followerUser']['follower_count'] = $data->follower_count;
+                
+                    $user['follower'][$key]['followerUser']['follower_count']  = Connection::where('sender_id',$values['followerUser']['id'])->where('status','accepted')->count();
+                  
                 }
             }
-        return $user;
+        }else{
+            return response()->json([
+                'status_code' => 400,
+                'message'        => "Sorry, Data not available.",
+            ]); 
+        }
+        $user['connections'] = $user['connection_status'];
+        unset($user['connection_status']);
+
+        $user['pendding_sent_request']  = Connection::where('sender_id' , $user_id)
+        ->where('status','pendding')
+        ->count();
+
+        $user['pendding_received_request'] = Connection::where('receiver_id' , $user_id)
+        ->where('status','pendding')
+        ->count();
+
+        
+        return response()->json([
+            'status_code' => 200,
+            'data'        => $user,
+        ], 200);
+
     }
 
     public function allUser(NearByUserRequest $request)

@@ -11,6 +11,7 @@ use App\Notifications\ArtNotification;
 use App\Models\Category;
 use App\Models\PaintingSize;
 use App\Models\ReportAdmin;
+use App\Models\Connection;
 use Auth;
 /**
  * @resource Contact
@@ -25,9 +26,35 @@ class ArtController extends Controller
         if( isset($other_user_id) && !empty($other_user_id) )
         {
             $user_id = $other_user_id;
-        }
+             $following = Connection::where('sender_id', $user_id)->where('status','accepted')->pluck('receiver_id')->toArray();
+            $artist = array_merge([$user_id], $following);
 
-        $art = Art::where('art.user_id',$user_id)->orderBy('art.id','DESC')->join('report_admin','report_admin.art_id','=','art.id')->where('art.user_id',Auth::user()->id)->where('report_admin.status','=','0')->get();
+            $art_id = Art::whereIn('user_id', $artist)->pluck('id');
+
+            $arts = Art::with('reportAdminStop','paymentData')->with('userInfo')->doesnthave('reportAdmin')
+            // ->whereHas('reportAdminStop', function ($query) {
+                // $query->where('status','=','0');
+            // })
+            ->whereIn('id',$art_id)->get();
+            if (count($arts) > 0) {
+                $art = [];
+                foreach ($arts as $checkart) {
+                    if ($checkart->reportAdminStop) {
+                        if ($checkart->paymentData) {
+                            $art[] = $checkart;
+                        }
+                    } else {
+                        $art[] = $checkart;
+                    }
+                }    
+            } else {
+                $art = [];
+            }
+        } else {
+           $art = Art::doesnthave('reportAdminStop')->with('userInfo')->doesnthave('reportAdmin')
+                ->where('user_id',$user_id)->orderBy('id','DESC')->get(); 
+        }
+      
         return response()->json([
             'status_code' => 200,
             'data'        => $art,
@@ -178,8 +205,13 @@ class ArtController extends Controller
 
         $user_data = $user_data->pluck('receiver_id')->toArray();
 
-        $art = Art::with('userInfo','paymentData')->doesntHave('reportAdmin')->join('report_admin','report_admin.art_id','=','art.id')->where('report_admin.status','=','0')->whereIn('art.user_id', $user_data);
+        $following = Connection::where('sender_id', $user->id)->where('status','accepted')->pluck('receiver_id')->toArray();
+        $artist = array_merge([$user->id], $following);
 
+        $art_id = Art::whereIn('user_id', $artist)->pluck('id');
+
+        $art = Art::with('reportAdminStop')->with('userInfo','paymentData')->doesnthave('reportAdmin')
+         ->whereIn('user_id',$user_data);
         $fields = ['title', 'art_gallery', 'size', 'category'];
         foreach ($fields as $field) {
             if ($request->exists($field)) {
@@ -199,9 +231,24 @@ class ArtController extends Controller
             }
         }
 
-        $art = $art->orderBy('art.id','DESC')->get();
+        $arts = $art->orderBy('art.id','DESC')->get();
+        if (count($arts) > 0) {
+             $art = [];
+            foreach ($arts as $checkart) {
+                if ($checkart->reportAdminStop) {
+                    if ($checkart->paymentData) {
+                        $art[] = $checkart;
+                    }
+                } else {
+                    $art[] = $checkart;
+                }
+            }
+        } else {
+            $art = [];
+        }
 
-        if($art->isEmpty()) {
+
+        if (count($arts) < 0) {
             return response()->json([
                 'status_code' => 400,
                 'data' => $art,
@@ -210,7 +257,7 @@ class ArtController extends Controller
         } else {
             return response()->json([
                 'status_code' => 200,
-                'data' => $art
+                'data' => $art,
             ]);
         }
     }

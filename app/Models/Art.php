@@ -81,6 +81,9 @@ class Art extends Model
        return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
     
+    public function reportAdminStop() {
+        return $this->hasOne(ReportAdmin::class,'art_id','id')->where('status','=','1');
+    }
 
 
 }

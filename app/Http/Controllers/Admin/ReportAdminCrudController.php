@@ -93,16 +93,19 @@ class ReportAdminCrudController extends CrudController
 
     public function approve($id)
     {
-        \App\Models\ReportAdmin::where('id',$id)->update(['status'=>'1']);
+        $art_id = \App\Models\ReportAdmin::where('id',$id)->value('art_id');
+        \App\Models\ReportAdmin::where('art_id',$art_id)->update(['status'=>'1']);
+        //\App\Models\ReportAdmin::where('id',$id)->update(['status'=>'1']);
          Alert::success('Approved successfully')->flash();
          return \Redirect::back();
     }
 
     public function reject($id)
     {
-         \App\Models\ReportAdmin::where('id',$id)->update(['status'=>'0']);
-         Alert::success('Reject successfully')->flash();
-         return \Redirect::back();
+        $art_id = \App\Models\ReportAdmin::where('id',$id)->value('art_id');
+        \App\Models\ReportAdmin::where('art_id',$art_id)->update(['status'=>'0']);
+        Alert::success('Reject successfully')->flash();
+        return \Redirect::back();
     }
 
     //    protected function setupUpdateOperation()

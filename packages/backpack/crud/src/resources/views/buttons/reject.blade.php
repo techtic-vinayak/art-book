@@ -1,0 +1,1 @@
+	<a href="{{ url($crud->route.'/reject/'.$entry->getKey()) }}" class="btn btn-xs btn-default"><i class="fa fa-eye"></i> Reject</a>
